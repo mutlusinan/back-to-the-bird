@@ -73,5 +73,8 @@
   },
   "featureIcons": {
     "message": "Era icons"
+  },
+  "featureAvatar": {
+    "message": "Avatar shape"
   }
 }

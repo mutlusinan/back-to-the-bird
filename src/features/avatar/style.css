@@ -1,0 +1,1 @@
+html[data-ot-f-avatar] :is([data-ot~="avatar"],[data-ot~="avatar"] div,#ot-avatar){border-radius:var(--ot-avatar-radius) !important}
