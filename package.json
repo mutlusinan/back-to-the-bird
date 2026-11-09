@@ -1,0 +1,32 @@
+{
+  "name": "back-to-the-bird",
+  "version": "0.1.0",
+  "description": "Classic Twitter design tokens for X",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mutlusinan/back-to-the-bird.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "wxt prepare"
+  },
+  "devDependencies": {
+    "happy-dom": "21.0.4",
+    "typescript": "5.9.3",
+    "vitest": "5.1.0",
+    "wxt": "0.21.5"
+  }
+}
