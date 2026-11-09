@@ -103,3 +103,17 @@ test('a logo rendered after startup activates branding', async () => {
   await sleep(80);
   expect(html().hasAttribute('data-ot-f-branding')).toBe(true);
 });
+
+test('no badge is sent while the page is still rendering', async () => {
+  document.body.innerHTML = '';
+  running = await main({ doc: document, win: window });
+  await sleep(80);
+  expect(sent.some((m) => m.type === 'ot:badge')).toBe(false);
+});
+
+test('after the grace period a missing anchor shows on the badge', async () => {
+  document.body.innerHTML = '';
+  running = await main({ doc: document, win: window, graceMs: 30 });
+  await sleep(120);
+  expect(sent).toContainEqual({ type: 'ot:badge', level: 'warn' });
+});

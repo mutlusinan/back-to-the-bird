@@ -52,7 +52,16 @@ export function attachShowOriginalPort(port: PortLike, set: (hold: boolean) => v
  * Content script entry. The top frame runs everything; subframes (X's chat
  * iframe) run only the engine features, so they never report missing anchors.
  */
-export async function main({ doc, win }: { doc: Document; win: Window }): Promise<ContentController> {
+export async function main({
+  doc,
+  win,
+  graceMs = HEALTH_DELAY_MS,
+}: {
+  doc: Document;
+  win: Window;
+  /** Startup period in which X is still rendering: no badge and no palette verdict yet. */
+  graceMs?: number;
+}): Promise<ContentController> {
   const isTop = win.top === win;
   const frameKind = isTop ? 'top' : 'sub';
   const html = doc.documentElement;
@@ -145,6 +154,7 @@ export async function main({ doc, win }: { doc: Document; win: Window }): Promis
   }
 
   let lastLevel: string | undefined;
+  let graceOver = false;
   let featuresDirty = true;
   const scheduler = createScheduler({
     root: html,
@@ -175,7 +185,7 @@ export async function main({ doc, win }: { doc: Document; win: Window }): Promis
         health.error('core', err);
       }
       health.setSheets(engine.sheetStats());
-      if (isTop) {
+      if (isTop && graceOver) {
         const level = health.level();
         if (level !== lastLevel) {
           lastLevel = level;
@@ -205,7 +215,10 @@ export async function main({ doc, win }: { doc: Document; win: Window }): Promis
   };
 
   if (isTop) {
-    const timer = setTimeout(() => void checkPalette(health, engine.matchedKeys(), map, theme, html), HEALTH_DELAY_MS);
+    const timer = setTimeout(() => {
+      graceOver = true;
+      void checkPalette(health, engine.matchedKeys(), map, theme, html).then(() => scheduler.poke());
+    }, graceMs);
     cleanups.push(() => clearTimeout(timer));
 
     // sendResponse rather than a returned Promise: Chrome does not honour promise returns here.
