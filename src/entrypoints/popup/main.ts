@@ -7,6 +7,8 @@ import { healthRows, toggleRows, withFeature } from './model';
 // Keys are composed at runtime (e.g. `status_${status}`), so the generated literal union does not apply.
 const getMessage = browser.i18n.getMessage as (key: string) => string;
 const t = (key: string) => getMessage(key) || key;
+// Details are message keys (e.g. unreadableSheets), anchor names or free error text; only key-shaped ones are looked up.
+const detailText = (detail: string) => (/^\w+$/.test(detail) ? t(detail) : detail);
 const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
 async function activeXTab(): Promise<Browser.tabs.Tab | undefined> {
@@ -53,7 +55,7 @@ function renderHealth(response: HealthResponse | null): void {
     if (row.status !== 'n/a') {
       const detail = document.createElement('span');
       detail.className = 'detail';
-      detail.textContent = row.detail ? `${t(`status_${row.status}`)}: ${row.detail}` : t(`status_${row.status}`);
+      detail.textContent = row.detail ? `${t(`status_${row.status}`)}: ${detailText(row.detail)}` : t(`status_${row.status}`);
       item.append(detail);
     }
     list.append(item);

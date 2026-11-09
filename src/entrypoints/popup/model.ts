@@ -25,9 +25,22 @@ export function withFeature(s: Settings, id: FeatureId, on: boolean): Settings {
   return { ...s, features: { ...s.features, [id]: on } };
 }
 
-/** One row per implemented feature; null means the active tab is not x.com. */
+/** The style engine itself: errors outside any feature, or no readable stylesheet at all. */
+function coreRow(r: HealthResponse): HealthRow {
+  const error = r.snapshot.errors.find((e) => e.feature === 'core');
+  if (error) return { labelKey: 'coreStatus', status: 'error', detail: error.message };
+  const { readable, unreadable } = r.snapshot.sheets;
+  if (unreadable > 0 && readable === 0) return { labelKey: 'coreStatus', status: 'error', detail: 'unreadableSheets' };
+  return { labelKey: 'coreStatus', status: 'ok' };
+}
+
+/** The engine row, then one row per implemented feature; null means the active tab is not x.com. */
 export function healthRows(r: HealthResponse | null): HealthRow[] {
   if (r === null) return [{ labelKey: 'notOnX', status: 'n/a' }];
+  return [coreRow(r), ...featureRows(r)];
+}
+
+function featureRows(r: HealthResponse): HealthRow[] {
   return IMPLEMENTED_FEATURES.map((id): HealthRow => {
     const error = r.snapshot.errors.find((e) => e.feature === id);
     if (error) return { labelKey: labelKey(id), status: 'error', detail: error.message };

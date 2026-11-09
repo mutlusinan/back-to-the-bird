@@ -1,19 +1,59 @@
 {
-  "extName": { "message": "Back to the Bird" },
-  "extDescription": { "message": "X için klasik Twitter tasarım token'ları" },
-  "featuresTitle": { "message": "Özellikler" },
-  "healthTitle": { "message": "Bu sayfadaki durum" },
-  "featurePalette": { "message": "Renkler" },
-  "featureFont": { "message": "Yazı tipi" },
-  "featureSurfaces": { "message": "Sayfa ve kartlar" },
-  "featureBranding": { "message": "Kuş logosu ve simge" },
-  "status_ok": { "message": "Çalışıyor" },
-  "status_warn": { "message": "Bulunamadı" },
-  "status_error": { "message": "Hata" },
-  "status_off": { "message": "Kapalı" },
-  "status_unavailable": { "message": "Kullanılamıyor" },
-  "notOnX": { "message": "Durumu görmek için x.com'u aç" },
-  "showOriginal": { "message": "Orijinali görmek için basılı tut" },
-  "copyReport": { "message": "Rapor kopyala" },
-  "copied": { "message": "Rapor kopyalandı. Kullanıcı adı, bağlantı ya da içerik içermez." }
+  "extName": {
+    "message": "Back to the Bird"
+  },
+  "extDescription": {
+    "message": "X için klasik Twitter tasarım token'ları"
+  },
+  "featuresTitle": {
+    "message": "Özellikler"
+  },
+  "healthTitle": {
+    "message": "Bu sayfadaki durum"
+  },
+  "featurePalette": {
+    "message": "Renkler"
+  },
+  "featureFont": {
+    "message": "Yazı tipi"
+  },
+  "featureSurfaces": {
+    "message": "Sayfa ve kartlar"
+  },
+  "featureBranding": {
+    "message": "Kuş logosu ve simge"
+  },
+  "status_ok": {
+    "message": "Çalışıyor"
+  },
+  "status_warn": {
+    "message": "Bulunamadı"
+  },
+  "status_error": {
+    "message": "Hata"
+  },
+  "status_off": {
+    "message": "Kapalı"
+  },
+  "status_unavailable": {
+    "message": "Kullanılamıyor"
+  },
+  "notOnX": {
+    "message": "Durumu görmek için x.com'u aç"
+  },
+  "showOriginal": {
+    "message": "Orijinali görmek için basılı tut"
+  },
+  "copyReport": {
+    "message": "Rapor kopyala"
+  },
+  "copied": {
+    "message": "Rapor kopyalandı. Kullanıcı adı, bağlantı ya da içerik içermez."
+  },
+  "coreStatus": {
+    "message": "Stil motoru"
+  },
+  "unreadableSheets": {
+    "message": "stil sayfaları okunamıyor"
+  }
 }

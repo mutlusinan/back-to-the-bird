@@ -46,3 +46,23 @@ test('palette misses make the palette row warn', () => {
 test('the era selector stays hidden while only one era exists', () => {
   expect(showEraSelector()).toBe(false);
 });
+
+test('the first row reports the style engine itself', () => {
+  expect(healthRows(response())[0]).toEqual({ labelKey: 'coreStatus', status: 'ok' });
+});
+
+test('a core error shows on the engine row', () => {
+  expect(healthRows(response({ errors: [{ feature: 'core', message: 'bad data' }] }))[0]).toEqual({
+    labelKey: 'coreStatus',
+    status: 'error',
+    detail: 'bad data',
+  });
+});
+
+test('unreadable stylesheets show on the engine row', () => {
+  expect(healthRows(response({ sheets: { readable: 0, unreadable: 2 } }))[0]).toEqual({
+    labelKey: 'coreStatus',
+    status: 'error',
+    detail: 'unreadableSheets',
+  });
+});
