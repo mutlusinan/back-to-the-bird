@@ -27,5 +27,7 @@ jobs:
         with:
           name: extension-zips
           path: .output/*.zip
+          # WXT writes to .output/, a hidden directory, which upload-artifact skips by default.
+          include-hidden-files: true
           if-no-files-found: error
 # Visual tests (Playwright) are not run here: their baselines are rendered on Windows.
