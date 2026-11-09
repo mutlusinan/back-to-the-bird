@@ -1,2 +1,2 @@
-html[data-ot-f-surfaces] body{background-color:var(--ot-bg-page) !important}
+html[data-ot-f-surfaces] body:is(body,#ot-page){background-color:var(--ot-bg-page) !important}
 html[data-ot-f-surfaces] [data-ot~="primaryColumn"],html[data-ot-f-surfaces] [data-ot~="sidebarBox"]{background-color:var(--ot-bg-card);border-color:var(--ot-border)}
