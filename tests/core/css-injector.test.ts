@@ -20,11 +20,18 @@ test('the first css is inserted', async () => {
   expect(calls).toEqual(['insert 1:0 A']);
 });
 
-test('a later css replaces the earlier one in the same frame', async () => {
+test('the previous css named by the content script is replaced', async () => {
   const { api, calls } = fakeApi();
   const injector = createCssInjector(api);
   await injector.handle(1, 0, 'A');
-  await injector.handle(1, 0, 'B');
+  await injector.handle(1, 0, 'B', 'A');
+  expect(calls).toEqual(['insert 1:0 A', 'remove 1:0 A', 'insert 1:0 B']);
+});
+
+test('a restarted background still removes the previous css', async () => {
+  const { api, calls } = fakeApi();
+  await createCssInjector(api).handle(1, 0, 'A');
+  await createCssInjector(api).handle(1, 0, 'B', 'A'); // new instance = service worker restarted
   expect(calls).toEqual(['insert 1:0 A', 'remove 1:0 A', 'insert 1:0 B']);
 });
 
@@ -41,18 +48,18 @@ test('a failed insert reports not ok', async () => {
   expect(await createCssInjector(api).handle(1, 0, 'A')).toEqual({ ok: false });
 });
 
-test('forget drops a closed tab', async () => {
+test('concurrent calls for one frame run in order', async () => {
+  const { api, calls } = fakeApi();
+  const injector = createCssInjector(api);
+  await Promise.all([injector.handle(1, 0, 'A'), injector.handle(1, 0, 'B', 'A')]);
+  expect(calls).toEqual(['insert 1:0 A', 'remove 1:0 A', 'insert 1:0 B']);
+});
+
+test('forget drops the ordering chain of a closed tab', async () => {
   const { api, calls } = fakeApi();
   const injector = createCssInjector(api);
   await injector.handle(1, 0, 'A');
   injector.forget(1);
   await injector.handle(1, 0, 'B');
   expect(calls).toEqual(['insert 1:0 A', 'insert 1:0 B']);
-});
-
-test('concurrent calls for one frame run in order', async () => {
-  const { api, calls } = fakeApi();
-  const injector = createCssInjector(api);
-  await Promise.all([injector.handle(1, 0, 'A'), injector.handle(1, 0, 'B')]);
-  expect(calls).toEqual(['insert 1:0 A', 'remove 1:0 A', 'insert 1:0 B']);
 });

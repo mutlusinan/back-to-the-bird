@@ -16,7 +16,7 @@ export default defineBackground(() => {
     const tabId = sender.tab?.id;
     if (tabId === undefined) return undefined;
     if (message?.type === 'ot:css') {
-      void injector.handle(tabId, sender.frameId ?? 0, message.css).then(sendResponse);
+      void injector.handle(tabId, sender.frameId ?? 0, message.css, message.previous).then(sendResponse);
       return true; // keeps sendResponse alive for the async reply
     }
     if (message?.type === 'ot:badge') {

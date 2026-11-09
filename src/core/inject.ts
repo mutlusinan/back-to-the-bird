@@ -2,22 +2,27 @@ import type { ToBackground } from './messages';
 
 /**
  * Content side of CSS injection. Prefers the background's scripting.insertCSS
- * (unaffected by the page's CSP); if that is refused or the extension context
- * is gone, switches for good to one <style data-ot> element.
+ * (unaffected by the page's CSP) and names the CSS each message replaces; if
+ * the background refuses, switches for good to one <style data-ot> element.
  */
 export function createInjector(
   doc: Document,
   send: (m: ToBackground) => Promise<{ ok: boolean } | undefined>,
 ): (css: string) => Promise<void> {
   let fallback: HTMLStyleElement | undefined;
+  let inserted: string | undefined;
 
   return async (css) => {
     if (!fallback) {
       try {
-        const response = await send({ type: 'ot:css', css });
-        if (response?.ok) return;
+        const message: ToBackground = inserted === undefined ? { type: 'ot:css', css } : { type: 'ot:css', css, previous: inserted };
+        const response = await send(message);
+        if (response?.ok) {
+          inserted = css;
+          return;
+        }
       } catch {
-        // extension reloaded or background unavailable
+        // background unavailable
       }
       fallback = doc.createElement('style');
       fallback.setAttribute('data-ot', '');

@@ -15,6 +15,17 @@ test('no style element when the background inserts the css', async () => {
   expect(ownStyles()).toHaveLength(0);
 });
 
+test('each message names the css inserted before it', async () => {
+  const sent: ToBackground[] = [];
+  const inject = createInjector(document, async (m) => (sent.push(m), { ok: true }));
+  await inject('A');
+  await inject('B');
+  expect(sent).toEqual([
+    { type: 'ot:css', css: 'A' },
+    { type: 'ot:css', css: 'B', previous: 'A' },
+  ]);
+});
+
 test('falls back to one style element when the background says no', async () => {
   const inject = createInjector(document, async () => ({ ok: false }));
   await inject('A');

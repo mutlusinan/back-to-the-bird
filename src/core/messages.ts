@@ -3,7 +3,7 @@ import type { ReportMeta } from './report';
 
 /** Content script → background. */
 export type ToBackground =
-  | { type: 'ot:css'; css: string }
+  | { type: 'ot:css'; css: string; previous?: string }
   | { type: 'ot:badge'; level: 'ok' | 'warn' | 'error' };
 
 /** Popup → content script (top frame only). */
