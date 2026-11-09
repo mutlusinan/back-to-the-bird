@@ -119,3 +119,27 @@ sızıntı ölçümü için yeterli, şekiller ana sayfada tam CSS ile doğrulan
 
 Bilinen eksikler: X'in yeni menü öğeleri (Calls, History, Creator Studio) ve
 paylaş/geri/yazma ikonları X'in ikonuyla kalıyor.
+
+## M3 canlı kontrol sonuçları (2026-11-09)
+
+Sözcük CSS'i ve çapalar giriş yapılmış x.com'da (İngilizce arayüz) denendi;
+Türkçe ve Arapça için X'in dil ayarı değiştirilmedi, sayfanın `html[lang]`'i
+geçici olarak değiştirildi. Repost menüsü açılıp Escape ile kapatıldı, hiçbir
+öğe seçilmedi, hiçbir şey gönderilmedi.
+
+| Yer | en | tr | ar |
+|---|---|---|---|
+| Sol menü "Post" | Tweet ✓ (tek kez) | Tweetle ✓ | تغريد ✓ |
+| Ana sayfa satır içi "Post" | Tweet ✓ | Tweetle ✓ | تغريد ✓ |
+| Tweet sayfasındaki yanıt düğmesi | "Reply" kalır ✓ | – | – |
+| Repost menüsü | Repost → Retweet ✓, Quote (o sırada `null`) kalır ✓ | – | – |
+| Profil sekmeleri | Posts → Tweets, Reposts → Retweets ✓ | Tweetler, Retweet ✓ | تغريدات / التغريدات, إعادات تغريد ✓ |
+| Etkileşim sekmeleri | Reposts → Retweets ✓, Quotes kalır ✓ | – | – |
+
+Canlı kontrolde iki hata bulunup düzeltildi: `:has()` iç içe yazıldığı için
+kural tarayıcıda geçersizdi (metin gizleniyor, sözcük çıkmıyordu); yaprağı
+saran ara `span` yüzünden menüdeki "Tweet" iki kez çiziliyordu. İkisi için
+Chrome'da çalışan Playwright testleri var.
+
+Ölçülmeyenler: gerçek Türkçe/Arapça X arayüzü (X'in kendi çevirileriyle
+yapısı aynı olmalı), dar ekranda menü düğmesi (birim testinde), Firefox.
