@@ -1,6 +1,8 @@
 import { browser } from 'wxt/browser';
 import { createCssInjector } from '../core/css-injector';
 import type { ToBackground } from '../core/messages';
+import { refreshRemote } from '../remote/fetch';
+import { ensureRemoteAlarm, REMOTE_ALARM } from '../remote/schedule';
 
 const BADGE_COLORS = { warn: '#FFAD1F', error: '#E0245E' } as const;
 
@@ -30,4 +32,20 @@ export default defineBackground(() => {
   });
 
   browser.tabs.onRemoved.addListener((tabId) => injector.forget(tabId));
+
+  // Remote data (spec §12): on install, on browser start and once a day. Failures keep the stored data.
+  const refresh = () =>
+    void refreshRemote({
+      fetch: (url, init) => fetch(url, init),
+      store: {
+        get: async (k) => (await browser.storage.local.get(k))[k],
+        set: (k, v) => browser.storage.local.set({ [k]: v }),
+      },
+      now: Date.now,
+      version: browser.runtime.getManifest().version,
+    });
+  browser.runtime.onInstalled.addListener(refresh);
+  browser.runtime.onStartup.addListener(refresh);
+  browser.alarms.onAlarm.addListener((alarm) => alarm.name === REMOTE_ALARM && refresh());
+  void ensureRemoteAlarm(browser.alarms);
 });

@@ -2,6 +2,7 @@ import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { DEFAULT_SETTINGS, saveSettings } from '../../src/core/settings';
 import type { ToBackground } from '../../src/core/messages';
 import { main } from '../../src/entrypoints/content/main';
+import { WORDING_KEYS } from '../../src/wording/keys';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const html = () => document.documentElement;
@@ -190,6 +191,52 @@ describe('wording', () => {
     await sleep(80);
     expect(html().getAttribute('data-ot-era')).toBe('2014');
     expect(wordingCss()).toHaveLength(1);
+  });
+});
+
+describe('remote data', () => {
+  const store = async (over: Record<string, unknown>) => {
+    const words = Object.fromEntries(WORDING_KEYS.map((k) => [k, null]));
+    const text = JSON.stringify({
+      schemaVersion: 1,
+      dataVersion: '2026-11-10.1',
+      minExtensionVersion: '0.0.0',
+      maxExtensionVersion: null,
+      selectors: {},
+      paletteMap: null,
+      wording: { nl: { ...words, composeButton: 'Tweeten' } },
+      disabledFeatures: [],
+      ...over,
+    });
+    await fakeBrowser.storage.local.set({ 'ot:remote': { text, fetchedAt: 1 } });
+  };
+
+  test('remote selectors are tried before the built-in ones', async () => {
+    await store({ selectors: { primaryColumn: ['main[data-remote]'] } });
+    document.body.insertAdjacentHTML('beforeend', '<main data-remote id="rm"></main>');
+    running = await main({ doc: document, win: window });
+    await sleep(80);
+    expect(document.getElementById('rm')!.getAttribute('data-ot')).toContain('primaryColumn');
+    expect(document.querySelector('div[data-testid="primaryColumn"]')!.getAttribute('data-ot') ?? '').not.toContain('primaryColumn');
+  });
+
+  test('a remotely disabled feature stays off even though the user has it on', async () => {
+    await store({ disabledFeatures: ['surfaces', 'palette'] });
+    running = await main({ doc: document, win: window });
+    await sleep(80);
+    expect(html().hasAttribute('data-ot-f-surfaces')).toBe(false);
+    expect(html().hasAttribute('data-ot-f-palette')).toBe(false);
+    expect(html().hasAttribute('data-ot-f-branding')).toBe(true);
+  });
+
+  test('remote wording adds a language', async () => {
+    await store({});
+    html().lang = 'nl';
+    document.body.insertAdjacentHTML('beforeend', '<a data-testid="SideNav_NewTweet_Button"><span><span>Post</span></span></a>');
+    running = await main({ doc: document, win: window });
+    await sleep(80);
+    html().removeAttribute('lang');
+    expect(sent.some((m) => m.type === 'ot:css' && m.css.includes('content:"Tweeten"'))).toBe(true);
   });
 });
 

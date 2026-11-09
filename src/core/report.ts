@@ -6,6 +6,9 @@ import type { PageType } from './route';
 export interface ReportMeta {
   extensionVersion: string;
   paletteMapVersion: number;
+  /** Whether valid remote data was in use, and its version. */
+  dataSource: 'built-in' | 'remote';
+  dataVersion: string | null;
   xBuild: string | null;
   lang: string;
   theme: Theme;

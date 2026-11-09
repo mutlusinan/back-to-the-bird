@@ -1,11 +1,14 @@
 import type { FeatureId } from '../config';
 import type { Health } from '../core/health';
 import type { AnchorName, SelectorTable } from '../core/selectors';
+import type { WordingTable } from '../wording/table';
 
 export interface FeatureContext {
   table: SelectorTable;
   doc: Document;
   health: Health;
+  /** Wording tables by language (built-in merged with remote data); built-in when absent. */
+  wording?: ReadonlyMap<string, WordingTable>;
 }
 
 /** A DOM feature: tags anchors, styles them from static CSS, never moves X's nodes. */

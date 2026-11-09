@@ -22,7 +22,9 @@ import { removeFavicon } from '../../features/branding/favicon';
 import { DOM_FEATURES, runFeatures } from '../../features/registry';
 import { wordingCss } from '../../wording/css';
 import { normalizeLang } from '../../wording/table';
-import { wordingTableFor } from '../../wording/tables';
+import { WORDING_TABLES } from '../../wording/tables';
+import { loadRemote } from '../../remote/fetch';
+import { mergeData, type DataSet } from '../../remote/merge';
 
 const ENGINE_FEATURES: readonly FeatureId[] = ['palette', 'font', 'typeScale', 'radius'];
 const LAST_THEME_KEY = 'ot:lastTheme';
@@ -74,14 +76,17 @@ export async function main({
   const cleanups: (() => void)[] = [];
   const noop: ContentController = { stop: () => {}, setShowOriginal: () => {} };
 
-  let map: PaletteMap;
-  let table: SelectorTable;
+  let data: DataSet;
   let settings: Settings;
   let theme: Theme;
   try {
-    map = parsePaletteMap(paletteMapJson);
-    table = parseSelectorTable(selectorsJson);
-    const [loaded, lastTheme] = await Promise.all([loadSettings(), localStore.get(LAST_THEME_KEY)]);
+    const builtIn = { map: parsePaletteMap(paletteMapJson), table: parseSelectorTable(selectorsJson), wording: WORDING_TABLES };
+    const [loaded, lastTheme, remote] = await Promise.all([
+      loadSettings(),
+      localStore.get(LAST_THEME_KEY),
+      loadRemote(localStore, extensionVersion()),
+    ]);
+    data = mergeData(builtIn, remote);
     settings = loaded;
     theme = (doc.body && detectTheme(doc.body)) ?? (lastTheme === 'night' ? 'night' : 'light');
   } catch (err) {
@@ -93,9 +98,15 @@ export async function main({
   let showingOriginal = false;
   let stopped = false;
 
-  const enabled = (): Set<FeatureId> => new Set(IMPLEMENTED_FEATURES.filter((id) => settings.features[id]));
-  const active = (): Set<FeatureId> =>
-    new Set([...IMPLEMENTED_FEATURES.filter((id) => ENGINE_FEATURES.includes(id)), ...domActive]);
+  const { map, table } = data;
+  const usable = IMPLEMENTED_FEATURES.filter((id) => !data.disabled.has(id));
+  const enabled = (): Set<FeatureId> => new Set(usable.filter((id) => settings.features[id]));
+  const active = (): Set<FeatureId> => new Set([...usable.filter((id) => ENGINE_FEATURES.includes(id)), ...domActive]);
+  /** Runs the DOM features; remotely disabled ones report why they are off. */
+  const runDom = () => {
+    domActive = runFeatures({ table, doc, health, wording: data.wording }, enabled());
+    for (const id of data.disabled) health.setFeature(id, 'off', 'remoteDisabled');
+  };
   const applyAttributes = () => {
     if (!showingOriginal && !stopped) applyHtmlAttributes(html, settings, theme, active());
   };
@@ -133,7 +144,7 @@ export async function main({
     },
     now: () => performance.now(),
     budgetMs: ENGINE_BUDGET_MS,
-    features: new Set(IMPLEMENTED_FEATURES.filter((id) => ENGINE_FEATURES.includes(id)) as EngineFeature[]),
+    features: new Set(usable.filter((id) => ENGINE_FEATURES.includes(id)) as EngineFeature[]),
   });
   await engine.start().catch((err) => health.error('core', err));
 
@@ -145,7 +156,7 @@ export async function main({
     const lang = domActive.has('wording') ? normalizeLang(html.lang) : '';
     if (lang === wordingLang) return;
     wordingLang = lang;
-    const words = lang ? wordingTableFor(lang) : null;
+    const words = lang ? (data.wording.get(lang) ?? null) : null;
     void injectWording(words ? wordingCss(words) : '');
   };
 
@@ -196,7 +207,7 @@ export async function main({
         }
         if (rerun) {
           featuresDirty = false;
-          domActive = runFeatures({ table, doc, health }, enabled());
+          runDom();
           applyAttributes();
           syncWording();
         }
@@ -247,7 +258,7 @@ export async function main({
       clearHtmlAttributes(html);
       if (doc.head) removeFavicon(doc.head);
     } else {
-      if (isTop) domActive = runFeatures({ table, doc, health }, enabled());
+      if (isTop) runDom();
       applyAttributes();
     }
   };
@@ -262,7 +273,7 @@ export async function main({
     // sendResponse rather than a returned Promise: Chrome does not honour promise returns here.
     const onMessage = (m: unknown, _sender: unknown, sendResponse: (r: HealthResponse | string) => void) => {
       const type = (m as { type?: string } | null)?.type;
-      if (type === 'ot:getHealth') sendResponse(healthResponse(health, map, settings, theme, doc));
+      if (type === 'ot:getHealth') sendResponse(healthResponse(health, data, settings, theme, doc));
       // Development builds only: fixture capture for tests (personal data removed).
       else if (type === 'ot:snapshot' && import.meta.env.DEV) sendResponse(takeSnapshot(doc));
       return undefined;
@@ -285,20 +296,31 @@ export async function main({
   return { stop: stopAll, setShowOriginal };
 }
 
+/** The running version; tests have no manifest. */
+function extensionVersion(): string {
+  try {
+    return browser.runtime.getManifest().version;
+  } catch {
+    return '0.0.0';
+  }
+}
+
 async function checkPalette(health: Health, engine: Engine, map: PaletteMap, theme: Theme, html: HTMLElement) {
   await health.recordPalette(theme, engine.matchedKeys(), map, engine.sheetStats().rules).catch(() => []);
   const missing = missingXTokens(map, theme, (name) => getComputedStyle(html).getPropertyValue(name));
   if (missing.length > 0) health.setFeature('palette', 'warn', missing.join(', '));
 }
 
-function healthResponse(health: Health, map: PaletteMap, settings: Settings, theme: Theme, doc: Document): HealthResponse {
+function healthResponse(health: Health, data: DataSet, settings: Settings, theme: Theme, doc: Document): HealthResponse {
   const main = doc.querySelector<HTMLScriptElement>('script[src*="/main."]');
   const build = main ? /main\.([a-z0-9]+)\.js/.exec(main.src) : null;
   return {
     snapshot: health.snapshot(),
     meta: {
       extensionVersion: browser.runtime.getManifest().version,
-      paletteMapVersion: map.version,
+      paletteMapVersion: data.map.version,
+      dataSource: data.source,
+      dataVersion: data.dataVersion,
       xBuild: build?.[1] ?? null,
       lang: doc.documentElement.lang,
       theme,

@@ -5,7 +5,9 @@ import { eraOptions, healthRows, showEraSelector, toggleRows, withEra, withFeatu
 
 const response = (over: Partial<HealthResponse['snapshot']> = {}): HealthResponse => ({
   snapshot: { features: {}, paletteMisses: [], sheets: { readable: 1, unreadable: 0 }, errors: [], ...over },
-  meta: { extensionVersion: '0.1.0', paletteMapVersion: 1, xBuild: null, lang: 'en', theme: 'light', era: '2017', pageType: 'home' },
+  meta: { extensionVersion: '0.1.0', paletteMapVersion: 1,
+  dataSource: 'built-in',
+  dataVersion: null, xBuild: null, lang: 'en', theme: 'light', era: '2017', pageType: 'home' },
 });
 
 test('toggle rows list the implemented features in order', () => {

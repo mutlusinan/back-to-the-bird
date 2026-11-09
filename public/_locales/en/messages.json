@@ -94,5 +94,14 @@
   },
   "takeSnapshot": {
     "message": "Take snapshot (dev)"
+  },
+  "dataBuiltIn": {
+    "message": "built-in data"
+  },
+  "dataRemote": {
+    "message": "data"
+  },
+  "remoteDisabled": {
+    "message": "turned off remotely"
   }
 }

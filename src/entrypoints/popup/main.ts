@@ -133,6 +133,10 @@ async function init(): Promise<void> {
   await renderEras();
   await renderToggles();
   renderHealth(response);
+  if (response) {
+    const { dataSource, dataVersion } = response.meta;
+    byId('version').textContent += dataSource === 'remote' ? ` · ${t('dataRemote')} ${dataVersion}` : ` · ${t('dataBuiltIn')}`;
+  }
   bindShowOriginal(tab);
 
   if (import.meta.env.DEV) bindSnapshot(tab);

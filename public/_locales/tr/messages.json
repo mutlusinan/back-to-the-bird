@@ -94,5 +94,14 @@
   },
   "takeSnapshot": {
     "message": "Örnek al (geliştirme)"
+  },
+  "dataBuiltIn": {
+    "message": "yerleşik veri"
+  },
+  "dataRemote": {
+    "message": "veri"
+  },
+  "remoteDisabled": {
+    "message": "uzaktan kapatıldı"
   }
 }

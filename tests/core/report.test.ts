@@ -11,6 +11,8 @@ const snapshot: HealthSnapshot = {
 const meta: ReportMeta = {
   extensionVersion: '0.1.0',
   paletteMapVersion: 1,
+  dataSource: 'built-in',
+  dataVersion: null,
   xBuild: 'abc123',
   lang: 'tr',
   theme: 'light',
