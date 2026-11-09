@@ -79,5 +79,14 @@
   },
   "featureFollowButton": {
     "message": "Follow and Tweet buttons"
+  },
+  "featureHideGrok": {
+    "message": "Hide Grok"
+  },
+  "featureHidePremium": {
+    "message": "Hide Premium ads"
+  },
+  "featureHideViewCounts": {
+    "message": "Hide view counts"
   }
 }

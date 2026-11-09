@@ -1,0 +1,3 @@
+html[data-ot-f-hideGrok] :is([data-ot~="grokNav"],[data-ot~="grokDrawer"],[data-ot~="grokTweetButton"]){display:none !important}
+html[data-ot-f-hidePremium] :is([data-ot~="premiumNav"],[data-ot~="premiumSidebar"]){display:none !important}
+html[data-ot-f-hideViewCounts] div:has(> [data-ot~="viewCount"]){display:none !important}

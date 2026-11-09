@@ -19,7 +19,13 @@ export type AnchorName =
   | 'followButton'
   | 'unfollowButton'
   | 'composeButton'
-  | 'composeSubmit';
+  | 'composeSubmit'
+  | 'grokNav'
+  | 'grokDrawer'
+  | 'grokTweetButton'
+  | 'premiumNav'
+  | 'premiumSidebar'
+  | 'viewCount';
 
 /** Anchor name → selectors in priority order. */
 export type SelectorTable = Record<AnchorName, string[]>;
@@ -46,6 +52,12 @@ export const ANCHOR_NAMES: readonly AnchorName[] = [
   'unfollowButton',
   'composeButton',
   'composeSubmit',
+  'grokNav',
+  'grokDrawer',
+  'grokTweetButton',
+  'premiumNav',
+  'premiumSidebar',
+  'viewCount',
 ];
 
 /** Validates an untrusted selector table; every selector must parse. */

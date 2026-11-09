@@ -79,5 +79,14 @@
   },
   "featureFollowButton": {
     "message": "Takip et ve Tweet düğmeleri"
+  },
+  "featureHideGrok": {
+    "message": "Grok'u gizle"
+  },
+  "featureHidePremium": {
+    "message": "Premium reklamlarını gizle"
+  },
+  "featureHideViewCounts": {
+    "message": "Görüntülenme sayılarını gizle"
   }
 }

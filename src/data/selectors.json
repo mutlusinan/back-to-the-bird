@@ -63,5 +63,24 @@
   ],
   "composeSubmit": [
     ":is([data-testid=\"tweetButtonInline\"],[data-testid=\"tweetButton\"])"
+  ],
+  "grokNav": [
+    "header[role=\"banner\"] nav a[href=\"/i/grok\"]"
+  ],
+  "grokDrawer": [
+    "[data-testid=\"GrokDrawer\"]"
+  ],
+  "grokTweetButton": [
+    "article div:has(> div > [data-testid=\"caret\"]) > div > button:not([data-testid])",
+    "button[aria-label=\"Grok actions\"]"
+  ],
+  "premiumNav": [
+    "[data-testid=\"premium-signup-tab\"]"
+  ],
+  "premiumSidebar": [
+    "[data-testid=\"sidebarColumn\"] aside:has(a[href=\"/i/premium_sign_up\"])"
+  ],
+  "viewCount": [
+    "article [role=\"group\"] a[href$=\"/analytics\"]"
   ]
 }
