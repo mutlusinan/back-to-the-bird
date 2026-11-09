@@ -61,3 +61,18 @@ for (const era of ['2014', '2017'] as const) {
     expect(seen.repost).toEqual({ word: '"Retweet" / ""', leafSize: '0px', others: 0 });
   });
 }
+
+test('wording draws Arabic words on a right-to-left page in Chrome', async ({ page }) => {
+  await page.goto(pathToFileURL(resolve('tests/fixtures/x-home-light.html')).href);
+  await page.evaluate(() => {
+    document.documentElement.lang = 'ar';
+    document.documentElement.dir = 'rtl';
+  });
+  await page.addScriptTag({ content: `${preview}\nwindow.OTPreview = OTPreview;` });
+  const word = await page.evaluate(async (css) => {
+    await (window as unknown as { OTPreview: { run(c: string, o: { era: string }): Promise<unknown> } }).OTPreview.run(css, { era: '2017' });
+    const leaf = document.querySelector('[data-testid="SideNav_NewTweet_Button"] span:not(:has(*))')!;
+    return getComputedStyle(leaf.parentElement!, '::before').content;
+  }, css);
+  expect(word).toBe('"تغريد" / ""');
+});

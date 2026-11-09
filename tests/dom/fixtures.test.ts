@@ -9,6 +9,8 @@ import { parsePaletteMap } from '../../src/engine/palette-map';
 import { SheetScanner } from '../../src/engine/scan';
 import { DOM_FEATURES, runFeatures } from '../../src/features/registry';
 import type { FeatureId } from '../../src/config';
+import { wordingCss } from '../../src/wording/css';
+import { WORDING_TABLES } from '../../src/wording/tables';
 
 const table = parseSelectorTable(selectorsJson);
 const map = parsePaletteMap(paletteMapJson);
@@ -86,4 +88,13 @@ test('no feature stylesheet uses physical left/right properties', () => {
     }
     expect(css, dir).not.toMatch(/\b(left|right)\b/);
   }
+});
+
+test('an Arabic right-to-left page turns wording on with the Arabic table', () => {
+  load('x-home-light.html', 'rtl');
+  document.documentElement.setAttribute('lang', 'ar');
+  const health = createHealth({ get: async () => undefined, set: async () => undefined });
+  const active = runFeatures({ table, doc: document, health }, new Set<FeatureId>(['wording']));
+  expect(active.has('wording')).toBe(true);
+  expect(wordingCss(WORDING_TABLES.get('ar')!)).toContain('content:"تغريد"');
 });
