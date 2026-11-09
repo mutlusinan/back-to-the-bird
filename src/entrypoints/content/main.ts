@@ -15,6 +15,7 @@ import { createEngine } from '../../engine';
 import { parsePaletteMap, type PaletteMap, type Theme } from '../../engine/palette-map';
 import { SheetScanner } from '../../engine/scan';
 import { missingXTokens } from '../../engine/xtokens';
+import { removeFavicon } from '../../features/branding/favicon';
 import { runFeatures } from '../../features/registry';
 
 const ENGINE_FEATURES: readonly FeatureId[] = ['palette', 'font', 'typeScale', 'radius'];
@@ -83,6 +84,19 @@ export async function main({ doc, win }: { doc: Document; win: Window }): Promis
   };
   const send = async (m: ToBackground) => (await browser.runtime.sendMessage(m)) as { ok: boolean } | undefined;
   const sendQuietly = (m: ToBackground) => void send(m).catch(() => {});
+  const stopAll = () => {
+    stopped = true;
+    for (const cleanup of cleanups.splice(0)) cleanup();
+  };
+  // The extension was reloaded or updated: the browser already dropped our stylesheets,
+  // so remove everything else of ours and leave the page exactly as X draws it.
+  const handOver = () => {
+    if (stopped) return;
+    stopAll();
+    clearHtmlAttributes(html);
+    for (const el of doc.querySelectorAll('style[data-ot]')) el.remove();
+    if (doc.head) removeFavicon(doc.head);
+  };
 
   applyAttributes();
 
@@ -90,7 +104,7 @@ export async function main({ doc, win }: { doc: Document; win: Window }): Promis
   const engine = createEngine({
     map,
     scan: () => scanner.scanNew(),
-    applyCss: createInjector(doc, send),
+    applyCss: createInjector(doc, send, handOver),
     cache: {
       get: async (k) => {
         const v = await localStore.get(k).catch(() => undefined);
@@ -130,6 +144,10 @@ export async function main({ doc, win }: { doc: Document; win: Window }): Promis
   const scheduler = createScheduler({
     root: html,
     onTick: async ({ added, routeChanged }) => {
+      if (!browser.runtime?.id) {
+        handOver();
+        return false;
+      }
       if (isTop && (featuresDirty || routeChanged || added.length > 0)) {
         featuresDirty = false;
         domActive = runFeatures({ table, doc, health }, enabled());
@@ -197,13 +215,7 @@ export async function main({ doc, win }: { doc: Document; win: Window }): Promis
     }
   }
 
-  return {
-    stop() {
-      stopped = true;
-      for (const cleanup of cleanups) cleanup();
-    },
-    setShowOriginal,
-  };
+  return { stop: stopAll, setShowOriginal };
 }
 
 async function checkPalette(health: Health, matched: ReadonlySet<string>, map: PaletteMap, theme: Theme, html: HTMLElement) {

@@ -63,6 +63,16 @@ test('a theme switch on X flips the theme attribute', async () => {
   expect(html().getAttribute('data-ot-theme')).toBe('night');
 });
 
+test('a dead extension context leaves the page in X state', async () => {
+  vi.spyOn(fakeBrowser.runtime, 'sendMessage').mockImplementation((async () => {
+    throw new Error('Extension context invalidated.');
+  }) as never);
+  running = await main({ doc: document, win: window });
+  await sleep(80);
+  expect(html().getAttributeNames().filter((n) => n.startsWith('data-ot'))).toEqual([]);
+  expect(document.querySelectorAll('style[data-ot], link[data-ot]')).toHaveLength(0);
+});
+
 test('a subframe runs only the engine features and sends no badge', async () => {
   running = await main({ doc: document, win: { top: {} } as unknown as Window });
   await sleep(80);

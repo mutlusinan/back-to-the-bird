@@ -34,11 +34,25 @@ test('falls back to one style element when the background says no', async () => 
   expect(ownStyles()[0]!.textContent).toBe('B');
 });
 
-test('a dead extension context falls back without throwing', async () => {
-  const inject = createInjector(document, async () => {
-    throw new Error('Extension context invalidated.');
-  });
+test('a dead extension context reports death and adds no style', async () => {
+  let dead = 0;
+  const inject = createInjector(
+    document,
+    async () => {
+      throw new Error('Extension context invalidated.');
+    },
+    () => dead++,
+  );
   await expect(inject('A')).resolves.toBeUndefined();
+  expect(dead).toBe(1);
+  expect(ownStyles()).toHaveLength(0);
+});
+
+test('an unreachable background still falls back', async () => {
+  const inject = createInjector(document, async () => {
+    throw new Error('Could not establish connection. Receiving end does not exist.');
+  });
+  await inject('A');
   expect(ownStyles()[0]!.textContent).toBe('A');
 });
 
