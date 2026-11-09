@@ -501,31 +501,43 @@ türetilmiştir (`docs/era-tokens.md`).
 
 ### 10.6 wording
 
-- Sadece CSS. Çapası olan arayüz etiketinde orijinal metin `font-size: 0`
-  ile görünmez yapılır, `::after` üzerinde
-  `content: var(--ot-w-<anahtar>) / ""` gösterilir. `/ ""` alternatif metni
-  ekran okuyucuların yeni metni okumasını engeller; ekran okuyucu X'in
-  orijinal etiketini okur.
-- Değişkenler arka plan tarafından, X'in `html[lang]` değerine ve döneme
-  göre üretilir: `html { --ot-w-composeButton: "Tweetle"; }`.
+- Sadece CSS. Çapalı denetimdeki metin yaprağı (`span:not(:has(*))`)
+  `font-size: 0` ile görünmez yapılır; yaprağın ebeveyninin `::before`'u
+  `content: "Tweet" / ""` gösterir. Ebeveyn, `:has()` iç içe yazılamadığı
+  için `:has(> span:not(:empty)):not(:has(> span > *))` ile seçilir: boş
+  yaprak (dar ekrandaki ikon düğmesi) sözcük almaz, yaprağı saran ara
+  `span`'ler ikinci kez sözcük çizmez. `/ ""` alternatif metni ekran
+  okuyucunun X'in orijinal etiketini okumasını sağlar; ondan önce düz
+  `content: "Tweet"` yazılır (alternatif metni bilmeyen tarayıcılar için).
+- Kurallar içerik betiğinde, X'in `html[lang]` değerine göre dil başına bir
+  kez üretilir (`src/wording/css.ts`) ve ayrı bir stil sayfası olarak
+  eklenir. Değeri `null` olan anahtar ya da dönem için kural yoktur, X'in
+  metni gizlenmez. Dönem farkları `[data-ot-era]` ile seçildiği için dönem
+  değişince CSS yeniden üretilmez. Sözcükler CSS dizesi olarak kaçışlanır
+  (tırnak, ters bölü, süslü parantez, noktalı virgül, kontrol karakterleri).
 - Arayüz dili tabloda yoksa `data-ot-f-wording` hiç konmaz; X'in metni
-  kalır.
-- Tweet metinlerine asla dokunulmaz.
+  kalır, sağlıkta `unavailable` + dil kodu.
+- Tweet metinlerine asla dokunulmaz. Yanıt düğmeleri ("Reply") ve satır içi
+  yanıt kutusu çapaların dışındadır.
 
 Anahtarlar (v1):
 
-| Anahtar | Bugün (EN) | Eski (EN) |
-|---|---|---|
-| `composeButton` | Post | Tweet |
-| `composeSubmit` | Post | Tweet |
-| `repostAction` | Repost | Retweet |
-| `undoRepostAction` | Undo repost | Undo Retweet |
-| `quoteAction` | Quote | Retweet with comment |
-| `repostsLabel` | Reposts | Retweets |
-| `quotesLabel` | Quotes | Quote Tweets |
-| `likesLabel` | Likes | Likes / Favorites (2014) |
-| `profilePostsTab` | Posts | Tweets |
-| `profilePostCount` | posts | Tweets |
+| Anahtar | Nerede | Bugün (EN) | Eski (EN) |
+|---|---|---|---|
+| `composeButton` | sol menü | Post | Tweet |
+| `composeSubmit` | ana sayfa ve yeni gönderi penceresi | Post | Tweet |
+| `repostAction` | Repost menüsü | Repost | Retweet |
+| `undoRepostAction` | Repost menüsü | Undo repost | Undo retweet (2014) / Undo Retweet |
+| `quoteAction` | Repost menüsü | Quote | Quote Tweet (2014) / Retweet with comment |
+| `repostsLabel` | profil ve etkileşim sekmeleri | Reposts | Retweets |
+| `quotesLabel` | etkileşim sekmesi | Quotes | — (2020'de geldi; `null`) |
+| `likesLabel` | profil ve etkileşim sekmeleri | Likes | Favorites (2014) / Likes |
+| `profilePostsTab` | profil | Posts | Tweets |
+
+`profilePostCount` (profil başlığındaki "5,914 posts") çıkarıldı: X sayıyı ve
+sözcüğü tek metin düğümünde yazıyor, CSS sadece sözcüğü değiştiremez. Tweet
+ayrıntısındaki sayı etiketleri X'te artık yok; çapalar ve canlı yapılar
+`docs/x-dom-inventory.md` §11'de.
 
 Bir anahtarın dönemlere göre farklı değeri olabilir:
 `"likesLabel": { "2014": "Favorites", "2017": "Likes" }`.
@@ -551,7 +563,10 @@ Bir anahtarın dönemlere göre farklı değeri olabilir:
 - **Geri çekilme:** Eski çevirisi doğrulanamayan dilde hiçbir sözcük
   değiştirilmez.
 - **İlk dalga (M3):** en, ja, es, pt, tr, ar, fr, de, ko, id, ru, it.
-- **Dosya şeması:** `wording/<lang>.json` her anahtarı ya doldurur ya da
+- **Kaynaklar** her değer için `docs/wording-sources.md`'de (arşiv adresi ve
+  okunan yer). Yan menüdeki "Tweet" düğmesinin arşivde kaynağı olmadığından
+  o dönemin oluşturucu "Tweet" düğmesi sözcüğü kullanıldı ("derived").
+- **Dosya şeması:** `src/data/wording/<lang>.json` her anahtarı ya doldurur ya da
   açıkça `null` yazar; eksik anahtar testte hata verir. `null` olan
   anahtar o dilde değiştirilmez.
 - **Dil kodu:** X'in `html[lang]` değeri birincil alt etikete indirgenir
