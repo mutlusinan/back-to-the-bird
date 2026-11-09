@@ -1,0 +1,20 @@
+{
+  "composeButton": {
+    "2014": "Tweet",
+    "2017": "Twitta"
+  },
+  "composeSubmit": "Tweet",
+  "repostAction": "Retweet",
+  "undoRepostAction": "Annulla Retweet",
+  "quoteAction": {
+    "2014": "Cita Tweet",
+    "2017": "Ritwitta e commenta"
+  },
+  "repostsLabel": "Retweet",
+  "quotesLabel": null,
+  "likesLabel": {
+    "2014": "Preferiti",
+    "2017": "Mi piace"
+  },
+  "profilePostsTab": "Tweet"
+}

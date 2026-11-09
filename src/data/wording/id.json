@@ -1,0 +1,17 @@
+{
+  "composeButton": "Tweet",
+  "composeSubmit": "Tweet",
+  "repostAction": "Retweet",
+  "undoRepostAction": "Batalkan retweet",
+  "quoteAction": {
+    "2014": "Kutip Tweet",
+    "2017": "Retweet dengan komentar"
+  },
+  "repostsLabel": "Retweet",
+  "quotesLabel": null,
+  "likesLabel": {
+    "2014": "Favorit",
+    "2017": "Suka"
+  },
+  "profilePostsTab": "Tweet"
+}

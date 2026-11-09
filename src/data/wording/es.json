@@ -1,0 +1,17 @@
+{
+  "composeButton": "Twittear",
+  "composeSubmit": "Twittear",
+  "repostAction": "Retwittear",
+  "undoRepostAction": "Deshacer Retweet",
+  "quoteAction": {
+    "2014": "Citar Tweet",
+    "2017": "Retwittear con comentario"
+  },
+  "repostsLabel": "Retweets",
+  "quotesLabel": null,
+  "likesLabel": {
+    "2014": "Favoritos",
+    "2017": "Me gusta"
+  },
+  "profilePostsTab": "Tweets"
+}

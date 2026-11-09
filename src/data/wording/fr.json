@@ -1,0 +1,20 @@
+{
+  "composeButton": "Tweeter",
+  "composeSubmit": "Tweeter",
+  "repostAction": "Retweeter",
+  "undoRepostAction": {
+    "2014": "Annuler le retweet",
+    "2017": "Annuler le Retweet"
+  },
+  "quoteAction": {
+    "2014": null,
+    "2017": "Retweeter avec un commentaire"
+  },
+  "repostsLabel": "Retweets",
+  "quotesLabel": null,
+  "likesLabel": {
+    "2014": "Favoris",
+    "2017": "J'aime"
+  },
+  "profilePostsTab": "Tweets"
+}

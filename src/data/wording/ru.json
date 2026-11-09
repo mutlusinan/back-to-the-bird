@@ -1,0 +1,17 @@
+{
+  "composeButton": "Твитнуть",
+  "composeSubmit": "Твитнуть",
+  "repostAction": "Ретвитнуть",
+  "undoRepostAction": "Отменить ретвит",
+  "quoteAction": {
+    "2014": "Цитировать",
+    "2017": "Ретвитнуть с комментарием"
+  },
+  "repostsLabel": null,
+  "quotesLabel": null,
+  "likesLabel": {
+    "2014": "Избранное",
+    "2017": "Нравится"
+  },
+  "profilePostsTab": "Твиты"
+}

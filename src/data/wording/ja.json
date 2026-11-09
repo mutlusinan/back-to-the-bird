@@ -1,0 +1,17 @@
+{
+  "composeButton": "ツイート",
+  "composeSubmit": "ツイート",
+  "repostAction": "リツイート",
+  "undoRepostAction": "リツイートを取り消す",
+  "quoteAction": {
+    "2014": "引用ツイート",
+    "2017": "コメントを付けてリツイート"
+  },
+  "repostsLabel": "リツイート",
+  "quotesLabel": null,
+  "likesLabel": {
+    "2014": "お気に入り",
+    "2017": "いいね"
+  },
+  "profilePostsTab": "ツイート"
+}

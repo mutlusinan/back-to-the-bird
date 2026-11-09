@@ -1,0 +1,23 @@
+{
+  "composeButton": "Tweetle",
+  "composeSubmit": "Tweetle",
+  "repostAction": {
+    "2014": "Retweetle",
+    "2017": "Retweet"
+  },
+  "undoRepostAction": {
+    "2014": "Retweeti geri al",
+    "2017": "Retweeti Geri Al"
+  },
+  "quoteAction": {
+    "2014": null,
+    "2017": "Yorumla birlikte Retweetle"
+  },
+  "repostsLabel": "Retweet",
+  "quotesLabel": null,
+  "likesLabel": {
+    "2014": "Favoriler",
+    "2017": "Beğeni"
+  },
+  "profilePostsTab": "Tweetler"
+}

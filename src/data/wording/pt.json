@@ -1,0 +1,26 @@
+{
+  "composeButton": {
+    "2014": "Tweetar",
+    "2017": "Tweet"
+  },
+  "composeSubmit": {
+    "2014": "Tweetar",
+    "2017": "Tweet"
+  },
+  "repostAction": "Retweetar",
+  "undoRepostAction": {
+    "2014": "Desfazer retweet",
+    "2017": "Desfazer Retweet"
+  },
+  "quoteAction": {
+    "2014": "Comentar Tweet",
+    "2017": "Retweetar com comentário"
+  },
+  "repostsLabel": "Retweets",
+  "quotesLabel": null,
+  "likesLabel": {
+    "2014": "Curtiu",
+    "2017": "Curtidas"
+  },
+  "profilePostsTab": "Tweets"
+}

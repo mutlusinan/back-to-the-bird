@@ -1,0 +1,20 @@
+{
+  "composeButton": {
+    "2014": "트윗하기",
+    "2017": "트윗"
+  },
+  "composeSubmit": "트윗하기",
+  "repostAction": "리트윗",
+  "undoRepostAction": "리트윗 취소",
+  "quoteAction": {
+    "2014": "트윗 인용하기",
+    "2017": "의견을 덧붙여서 리트윗하기"
+  },
+  "repostsLabel": "리트윗",
+  "quotesLabel": null,
+  "likesLabel": {
+    "2014": "관심글",
+    "2017": "마음에 들어요"
+  },
+  "profilePostsTab": "트윗"
+}
