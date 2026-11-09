@@ -23,13 +23,13 @@ test('a word for both eras hides the text leaf and draws the word before it', ()
     'html[data-ot-f-wording] [data-ot~="wordComposeButton"] span:not(:has(*)){font-size:0 !important}',
   );
   expect(css).toContain(
-    'html[data-ot-f-wording] [data-ot~="wordComposeButton"] :has(> span:not(:empty)):not(:has(> span > span))::before{content:"Tweet";content:"Tweet" / ""}',
+    'html[data-ot-f-wording] [data-ot~="wordComposeButton"] :has(> span:not(:empty)):not(:has(> span > *))::before{content:"Tweet";content:"Tweet" / ""}',
   );
 });
 
 test('a text leaf directly inside the anchored control still gets the word', () => {
   expect(wordingCss(table({ composeButton: 'Tweet' }))).toContain(
-    'html[data-ot-f-wording] [data-ot~="wordComposeButton"]:has(> span:not(:empty)):not(:has(> span > span))::before',
+    'html[data-ot-f-wording] [data-ot~="wordComposeButton"]:has(> span:not(:empty)):not(:has(> span > *))::before',
   );
 });
 

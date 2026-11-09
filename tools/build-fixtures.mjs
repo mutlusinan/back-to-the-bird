@@ -94,7 +94,7 @@ a{text-decoration:none}.r-bold{font-weight:bold}.r-clip{overflow:hidden}
       ${navLink('AppTabBar_Profile_Link', 'Profile')}
       <button data-testid="AppTabBar_More_Menu" aria-label="More" class="r-nav r-action-btn r-text">${icon('nav')}<span class="r-text">More</span></button>
     </nav>
-    <a href="/compose/post" data-testid="SideNav_NewTweet_Button" role="link" class="r-btn r-compose" style="${t.button}"><span style="color: rgb(${t.buttonText});">Post</span></a>
+    <a href="/compose/post" data-testid="SideNav_NewTweet_Button" role="link" class="r-btn r-compose" style="${t.button}"><div dir="ltr" style="color: rgb(${t.buttonText});"><div><span><div><div><span><span>Post</span></span></div></div></span></div></div></a>
   </header>
   <main role="main">
     <div data-testid="primaryColumn">

@@ -37,9 +37,9 @@ function keyRules(key: WordingKey, word: string, era?: Era): string[] {
   const scope = era === undefined ? 'html[data-ot-f-wording]' : `html[data-ot-f-wording][data-ot-era="${era}"]`;
   const anchor = `${scope} [data-ot~="${wordingAnchor(key)}"]`;
   const content = cssString(word);
-  // The leaf's parent: a non-empty span child that holds no span itself. :has() cannot nest,
+  // The leaf's parent: a non-empty span child that holds no element itself. :has() cannot nest,
   // so "leaf" is spelled as a negated :has() beside it rather than inside it.
-  const parent = ':has(> span:not(:empty)):not(:has(> span > span))::before';
+  const parent = ':has(> span:not(:empty)):not(:has(> span > *))::before';
   return [
     `${anchor} span:not(:has(*)){font-size:0 !important}`,
     `${anchor}${parent},${anchor} ${parent}{content:${content};content:${content} / ""}`,
