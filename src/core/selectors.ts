@@ -1,9 +1,42 @@
-export type AnchorName = 'sideNavLogo' | 'primaryColumn' | 'sidebarColumn' | 'sidebarBox' | 'radiusKeep';
+export type AnchorName =
+  | 'sideNavLogo'
+  | 'primaryColumn'
+  | 'sidebarColumn'
+  | 'sidebarBox'
+  | 'radiusKeep'
+  | 'navHome'
+  | 'navExplore'
+  | 'navNotifications'
+  | 'navMessages'
+  | 'navProfile'
+  | 'navMore'
+  | 'actionReply'
+  | 'actionRetweet'
+  | 'actionLike'
+  | 'actionLiked'
+  | 'actionBookmark';
 
 /** Anchor name → selectors in priority order. */
 export type SelectorTable = Record<AnchorName, string[]>;
 
-export const ANCHOR_NAMES: readonly AnchorName[] = ['sideNavLogo', 'primaryColumn', 'sidebarColumn', 'sidebarBox', 'radiusKeep'];
+export const ANCHOR_NAMES: readonly AnchorName[] = [
+  'sideNavLogo',
+  'primaryColumn',
+  'sidebarColumn',
+  'sidebarBox',
+  'radiusKeep',
+  'navHome',
+  'navExplore',
+  'navNotifications',
+  'navMessages',
+  'navProfile',
+  'navMore',
+  'actionReply',
+  'actionRetweet',
+  'actionLike',
+  'actionLiked',
+  'actionBookmark',
+];
 
 /** Validates an untrusted selector table; every selector must parse. */
 export function parseSelectorTable(json: unknown): SelectorTable {

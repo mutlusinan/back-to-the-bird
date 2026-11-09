@@ -21,7 +21,8 @@
     "zip:firefox": "wxt zip -b firefox",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare",
+    "icons": "node tools/build-icon-css.mjs"
   },
   "devDependencies": {
     "happy-dom": "21.0.4",

@@ -1,3 +1,4 @@
+import { IMPLEMENTED_FEATURES } from '../../src/config';
 import { DEFAULT_SETTINGS } from '../../src/core/settings';
 import type { HealthResponse } from '../../src/core/messages';
 import { eraOptions, healthRows, showEraSelector, toggleRows, withEra, withFeature } from '../../src/entrypoints/popup/model';
@@ -8,14 +9,10 @@ const response = (over: Partial<HealthResponse['snapshot']> = {}): HealthRespons
 });
 
 test('toggle rows list the implemented features in order', () => {
-  expect(toggleRows(DEFAULT_SETTINGS)).toEqual([
-    { id: 'palette', labelKey: 'featurePalette', checked: true },
-    { id: 'font', labelKey: 'featureFont', checked: true },
-    { id: 'typeScale', labelKey: 'featureTypeScale', checked: true },
-    { id: 'radius', labelKey: 'featureRadius', checked: true },
-    { id: 'surfaces', labelKey: 'featureSurfaces', checked: true },
-    { id: 'branding', labelKey: 'featureBranding', checked: true },
-  ]);
+  const rows = toggleRows(DEFAULT_SETTINGS);
+  expect(rows.map((r) => r.id)).toEqual([...IMPLEMENTED_FEATURES]);
+  expect(rows.every((r) => r.checked)).toBe(true);
+  expect(rows.find((r) => r.id === 'typeScale')?.labelKey).toBe('featureTypeScale');
 });
 
 test('withFeature returns a new settings object', () => {

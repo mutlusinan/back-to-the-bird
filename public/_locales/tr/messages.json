@@ -70,5 +70,8 @@
   },
   "featureRadius": {
     "message": "Köşeler"
+  },
+  "featureIcons": {
+    "message": "Dönem ikonları"
   }
 }

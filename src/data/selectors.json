@@ -15,5 +15,38 @@
   ],
   "radiusKeep": [
     "[data-testid=\"SearchBox_Search_Input_label\"], [data-testid=\"SearchBox_Search_Input_label\"] div, [role=\"switch\"], [role=\"switch\"] *"
+  ],
+  "navHome": [
+    "[data-testid=\"AppTabBar_Home_Link\"]"
+  ],
+  "navExplore": [
+    "[data-testid=\"AppTabBar_Explore_Link\"]"
+  ],
+  "navNotifications": [
+    "[data-testid=\"AppTabBar_Notifications_Link\"]"
+  ],
+  "navMessages": [
+    "[data-testid=\"AppTabBar_DirectMessage_Link\"]"
+  ],
+  "navProfile": [
+    "[data-testid=\"AppTabBar_Profile_Link\"]"
+  ],
+  "navMore": [
+    "[data-testid=\"AppTabBar_More_Menu\"]"
+  ],
+  "actionReply": [
+    "article [data-testid=\"reply\"]"
+  ],
+  "actionRetweet": [
+    "article :is([data-testid=\"retweet\"],[data-testid=\"unretweet\"])"
+  ],
+  "actionLike": [
+    "article [data-testid=\"like\"]"
+  ],
+  "actionLiked": [
+    "article [data-testid=\"unlike\"]"
+  ],
+  "actionBookmark": [
+    "article :is([data-testid=\"bookmark\"],[data-testid=\"removeBookmark\"])"
   ]
 }
