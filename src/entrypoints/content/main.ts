@@ -266,7 +266,9 @@ export async function main({
   if (isTop) {
     const timer = setTimeout(() => {
       graceOver = true;
-      void checkPalette(health, engine, map, theme, html).then(() => scheduler.poke());
+      // A palette switched off remotely matches nothing by design: no miss counting, no warning.
+      if (!data.disabled.has('palette')) void checkPalette(health, engine, map, theme, html).then(() => scheduler.poke());
+      else scheduler.poke();
     }, graceMs);
     cleanups.push(() => clearTimeout(timer));
 

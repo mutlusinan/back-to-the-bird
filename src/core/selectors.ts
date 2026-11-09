@@ -102,6 +102,9 @@ export function usableSelectors(name: string, list: unknown): string[] {
   for (const selector of list) {
     if (typeof selector !== 'string') throw new Error(`anchor ${name}: selector must be a string`);
   }
+  // The background service worker has no DOM: it keeps the strings, and the content script,
+  // which re-validates stored remote data on every page load, drops what this browser rejects.
+  if (typeof document === 'undefined') return [...(list as string[])];
   const probe = document.createDocumentFragment();
   return (list as string[]).filter((selector) => {
     try {

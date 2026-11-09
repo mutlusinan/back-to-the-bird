@@ -229,6 +229,13 @@ describe('remote data', () => {
     expect(html().hasAttribute('data-ot-f-branding')).toBe(true);
   });
 
+  test('a remotely disabled palette is not reported as unmatched colours', async () => {
+    await store({ disabledFeatures: ['palette'] });
+    running = await main({ doc: document, win: window, graceMs: 30 });
+    await sleep(150);
+    expect(sent.filter((m) => m.type === 'ot:badge')).toEqual([{ type: 'ot:badge', level: 'ok' }]);
+  });
+
   test('remote wording adds a language', async () => {
     await store({});
     html().lang = 'nl';
