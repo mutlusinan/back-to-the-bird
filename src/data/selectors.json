@@ -1,0 +1,6 @@
+{
+  "sideNavLogo": ["header[role=\"banner\"] h1 a[href=\"/home\"]", "header[role=\"banner\"] h1"],
+  "primaryColumn": ["[data-testid=\"primaryColumn\"]"],
+  "sidebarColumn": ["[data-testid=\"sidebarColumn\"]"],
+  "sidebarBox": ["[data-testid=\"sidebarColumn\"] section", "[data-testid=\"sidebarColumn\"] aside"]
+}
