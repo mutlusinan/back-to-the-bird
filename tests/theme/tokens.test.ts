@@ -47,6 +47,18 @@ test('2014 night takes 2017 night colors and 2014 shapes', () => {
   expect(css).toContain('--ot-avatar-radius:5px');
 });
 
+test.each(cases)('hover backgrounds are their base colour at one tenth opacity for %s %s', (era, theme) => {
+  const css = block(era, theme);
+  const value = (name: string) => new RegExp(`--ot-${name}:([^;}]+)`).exec(css)?.[1];
+  const tenPercent = (hex: string) => {
+    const n = (i: number) => parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16);
+    return `rgba(${n(0)},${n(1)},${n(2)},0.1)`;
+  };
+  for (const [hover, base] of [['accent-hover-bg', 'accent'], ['like-hover-bg', 'like-active'], ['retweet-hover-bg', 'retweet-active']]) {
+    expect(value(hover!), hover).toBe(tenPercent(value(base!)!));
+  }
+});
+
 test.each(cases)('every token the feature CSS uses is defined for %s %s', (era, theme) => {
   const dirs = ['surfaces', 'branding', 'radius', 'icons', 'avatar', 'buttons', 'hide'];
   const featureCss = dirs.map((d) => {

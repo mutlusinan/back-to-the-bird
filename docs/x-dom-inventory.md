@@ -156,11 +156,17 @@ satır içi stil yok. Gezinme ikonları 26.25px, eylem ikonları 18.75px.
 | `navMore` | `[data-testid="AppTabBar_More_Menu"]` | `button` |
 | `actionReply` | `article [data-testid="reply"]` | `button` |
 | `actionRetweet` | `article :is([data-testid="retweet"],[data-testid="unretweet"])` | |
-| `actionLike` | `article :is([data-testid="like"],[data-testid="unlike"])` | |
+| `actionLike` | `article [data-testid="like"]` | |
+| `actionLiked` | `article [data-testid="unlike"]` | beğenildi; X `like`↔`unlike` değiştirir |
 | `actionBookmark` | `article :is([data-testid="bookmark"],[data-testid="removeBookmark"])` | |
 
 Paylaş düğmesinin `data-testid`'i yok (`aria-label` dile bağlı); eylem
 grubunun (`[role="group"]`) son düğmesi.
+
+Çapası olmayan yeni menü öğeleri (Kasım 2026, X'in ikonuyla kalır):
+Calls (`AppTabBar_Calls_Link`, `/i/calls`), History (`a[href="/i/history"]`,
+`data-testid` yok), Creator Studio (`a[href="/i/jf/creators/studio"]`,
+`data-testid` yok).
 
 ### Düğmeler
 
@@ -185,10 +191,14 @@ grubunun (`[role="group"]`) son düğmesi.
 | `grokDrawer` | `[data-testid="GrokDrawer"]` | sağ alttaki sohbet çekmecesi |
 | `grokTweetButton` | `article div:has(> div > [data-testid="caret"]) > div > button:not([data-testid])` | tweet başlığındaki "Grok actions"; `aria-label` dile bağlı olduğu için yapısal |
 | `premiumNav` | `[data-testid="premium-signup-tab"]` | |
-| `premiumSidebar` | `[data-testid="sidebarColumn"] aside:has(a[href="/i/premium_sign_up"])` | "Subscribe to Premium" kutusu |
+| `premiumSidebar` | `[data-testid="sidebarColumn"] aside:has(a[href="/i/premium_sign_up"]), [data-testid="primaryColumn"] div:has(> button + div > a[href="/i/premium_sign_up"])` | "Subscribe to Premium" kutusu ve kendi profilindeki yeşil "You aren't verified yet / Get verified" kartı (kapatma düğmesi + içerik). happy-dom `:has(> div > a)` biçimini fazla eşlediği için kart düğme kardeşiyle bulunur |
 | `viewCount` | `article [role="group"] a[href$="/analytics"]` | sarmalayan `div` gizlenmeli |
 
 Etkin durum renkleri (kural tablosunda): beğeni `rgb(249, 24, 128)`, retweet
 `rgb(0, 186, 124)`.
+
+Ölçüm notu: X'in düğmelerinde `transition: background-color 0.2s`, eylem
+ikonlarının renginde `transition: color 0.2s` var. Stil değiştikten hemen
+sonra okunan `getComputedStyle` eski değeri verir; en az 300ms bekleyin.
 
 Durum renkleri kaynağı: `#react-native-stylesheet` kuralları — beğeni `rgb(249, 24, 128)` (hover zemini `rgba(249, 24, 128, 0.1)`), retweet `rgb(0, 186, 124)` (`rgba(0, 186, 124, 0.1)`), vurgu hover zemini `rgba(29, 155, 240, 0.1)`; iki temada aynı değerler.

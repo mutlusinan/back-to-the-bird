@@ -35,6 +35,15 @@ test('Premium, Grok nav and view count anchors are found', () => {
   expect(ids('viewCount')).toEqual(['vc']);
 });
 
+test('the profile "Get verified" card is hidden along with the Premium sidebar box', () => {
+  document.body.innerHTML = `
+    <div data-testid="primaryColumn"><div><div><div id="card"><button></button>
+      <div><div>You aren't verified yet</div><a href="/i/premium_sign_up">Get verified</a></div>
+    </div></div></div></div>
+    <div data-testid="sidebarColumn"><aside id="ps"><a href="/i/premium_sign_up"></a></aside></div>`;
+  expect(ids('premiumSidebar')).toEqual(['card', 'ps']);
+});
+
 test('hide features are active even when nothing is there to hide', () => {
   document.body.innerHTML = '';
   const health = createHealth({ get: async () => undefined, set: async () => undefined });

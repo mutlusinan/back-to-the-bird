@@ -384,15 +384,24 @@ alanı daha dar ve bakımı daha zor olur; mimarinin geri kalanı değişmez.
 ## 9. Token takımları
 
 `theme/tokens.css` dört takımı tanımlar. Her takım aynı değişkenleri
-doldurur: `--ot-bg-page`, `--ot-bg-card`, `--ot-bg-hover`, `--ot-text`,
-`--ot-text-2`, `--ot-border`, `--ot-accent`, `--ot-accent-hover`,
-`--ot-link`, `--ot-font`, `--ot-fs-body`, `--ot-radius-pill`,
-`--ot-radius-media`, `--ot-avatar-radius`.
+doldurur:
 
-Başlangıç değerleri aşağıdadır. **Kesin değerler** Wayback Machine'deki
-2015 ve 2018 tarihli twitter.com CSS paketlerinden (`twitter_core.bundle.css`
-ve benzerleri) alınır: açık takımlar için M1 (2017) ve M2 (2014), gece
-takımı için M1.
+- temel: `--ot-bg-page`, `--ot-bg-card`, `--ot-bg-hover`, `--ot-text`,
+  `--ot-text-2`, `--ot-border`, `--ot-accent`, `--ot-accent-hover`,
+  `--ot-link`, `--ot-font`, `--ot-fs-body`, `--ot-radius-pill`,
+  `--ot-radius-media`, `--ot-avatar-radius`;
+- durum: `--ot-like-active`, `--ot-like-hover-bg`, `--ot-retweet-active`,
+  `--ot-retweet-hover-bg`, `--ot-accent-hover-bg` (X'in beğeni pembesi,
+  retweet yeşili ve ikonların arkasındaki %10'luk hover daireleri bunlara
+  eşlenir; `*-hover-bg` her zaman ilgili rengin %10 opaklığıdır);
+- düğme: `--ot-btn-follow-{bg,image,border,text,hover-bg}`,
+  `--ot-btn-following-{bg,border,text}`, `--ot-btn-unfollow-{bg,border}`,
+  `--ot-btn-compose-{bg,hover-bg,text}` (§10.5).
+
+Değerler Wayback Machine'deki twitter.com CSS paketlerinden alındı:
+2017 takımları 2018 tarihli paketlerden (M1), 2014 takımları Ekim 2015
+tarihli paketlerden (M2). Kaynaklar ve bileşen tabloları
+`docs/era-tokens.md`'de.
 
 | Token | 2017-light | 2014-light |
 |---|---|---|
@@ -403,20 +412,28 @@ takımı için M1.
 | `text-2` | `#657786` | `#8899A6` |
 | `border` | `#E6ECF0` | `#E1E8ED` |
 | `accent` | `#1DA1F2` | `#55ACEE` |
+| `accent-hover` | `#006DBF` | `#3B88C3` |
 | `link` | `#1DA1F2` | `#0084B4` |
-| `font` | "Helvetica Neue", Helvetica, Arial, sans-serif | aynı |
+| `font` | "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif | "Helvetica Neue", Helvetica, Arial, sans-serif |
 | `fs-body` | `14px` | `14px` |
-| `radius-pill` | `9999px` | `4px` |
-| `radius-media` | `12px` | `5px` |
+| `radius-pill` | `100px` | `4px` |
+| `radius-media` | `5px` | `5px` |
 | `avatar-radius` | `50%` | `5px` |
+| `like-active` | `#E0245E` (kalp) | `#FFAC33` (yıldız) |
+| `retweet-active` | `#17BF63` | `#5C913B` |
 
-`2017-night` renkleri Wayback'teki 2018 gece modu CSS'inden alınır.
-`2014-night` = `2017-night` renkleri + 2014'ün renk dışı token'ları.
+`2017-night`, 2018'in "Night" modundan alınır: `#141D26` sayfa, `#1B2836`
+kart, `#182430` hover, beyaz metin, `#8899A6` ikincil metin, siyah
+ayırıcılar. 2014'te gece modu yoktu; `2014-night` = `2017-night` yüzey ve
+vurgu renkleri + 2014'ün renk dışı token'ları (köşe, avatar, font) ve
+durum renkleri (yıldız sarısı, retweet yeşili, Unfollow kırmızısı).
 
 2014'te `9999px` → `4px` eşlemesi, X'in yuvarlak kullandığı her şeyi
 (düğmeler, ikon üzerindeki vurgu daireleri, rozet noktaları) köşeli yapar.
-Yuvarlak kalması gerekenler M2'deki görsel incelemede belirlenir ve
-`selectors.json`'daki `radiusExceptions` çapasına eklenir.
+Yuvarlak kalması gerekenler `selectors.json`'daki `radiusKeep` çapasında:
+arama kutusu ve açma/kapama anahtarları (`[role=switch]`). M2 canlı
+kontrolünde ana sayfanın ekran görüntüsünde başka istisna gerektiren öğe
+görülmedi; diğer sayfalar görsel olarak taranmadı.
 
 Helvetica Neue lisanslı olduğu için eklentiyle dağıtılmaz; yüklü değilse
 sıradaki font kullanılır (Windows'ta pratikte Arial, dönemde de öyleydi).
@@ -445,12 +462,19 @@ doğrulanır.
 
 ### 10.3 icons
 
-Yaklaşık 15 ikon, dönemin tarzında kendimiz çizdiğimiz SVG'ler (dönemin
-ikon fontu kopyalanmaz): ana sayfa, keşfet, bildirimler, mesajlar, profil,
-daha fazla, yanıt, retweet, beğeni (2014: yıldız, 2017: kalp), beğenildi,
-yer işareti, paylaş, geri, yazma. X'in `<svg>`'si `visibility: hidden` ile
-gizlenir, bizimki `::before` üzerinde `mask-image` olarak çizilir; renk
-`currentColor`'dan gelir.
+Dönemin tarzında kendimiz çizdiğimiz SVG'ler (dönemin ikon fontu
+kopyalanmaz), `src/features/icons/svg/` altında: ana sayfa, keşfet,
+bildirimler, mesajlar, profil, daha fazla, yanıt, retweet, beğeni (2014:
+yıldız, 2017: kalp), beğenildi (dolu yıldız / dolu kalp), yer işareti.
+X'in `<svg>`'si yerinde kalır; içindeki yolların opaklığı 0 yapılır ve
+`<svg>`'nin kendisine `mask` + `background-color: currentColor` verilir.
+Böylece renk, hover ve beğenildi durumu X'in kendi renk kurallarından
+(palet eşlemesi üzerinden) gelir. Beğenildi ikonu ayrı çapadır
+(`actionLiked`, `data-testid="unlike"`); X `like`↔`unlike` değiştirdiğinde
+zamanlayıcı öğeyi yeniden etiketler.
+
+Henüz yapılmayanlar: paylaş, geri, yazma ikonları ve X'in yeni menü
+öğeleri (Calls, History, Creator Studio); bunlar X'in ikonuyla kalır.
 
 ### 10.4 avatar
 
@@ -459,12 +483,21 @@ gizlenir, bizimki `::before` üzerinde `mask-image` olarak çizilir; renk
 
 ### 10.5 followButton
 
-Takip et düğmeleri (`*-follow`, `*-unfollow`):
+Takip et düğmeleri (`*-follow`, `*-unfollow`) ve yazma düğmeleri
+(`SideNav_NewTweet_Button`, `tweetButtonInline`, `tweetButton`) aynı
+özellik anahtarını paylaşır. Renkler §9'daki `--ot-btn-*` token'larından
+gelir; köşe her zaman `--ot-radius-pill`.
 
-- takip edilmiyor: beyaz zemin, 1px `--ot-accent` kenarlık, `--ot-accent`
-  metin;
-- takip ediliyor: `--ot-accent` zemin, beyaz metin;
-- köşe `--ot-radius-pill`.
+| Durum | 2017-light | 2014-light | Gece (iki dönem) |
+|---|---|---|---|
+| Takip et | beyaz zemin, 1px `#1DA1F2` kenarlık, `#1DA1F2` metin; hover `#EAF5FD` | `#FFF`→`#F5F8FA` gradyan, 1px `#E1E8ED` kenarlık, `#292F33` metin; hover `#E1E8ED` | kart zemini, 1px vurgu kenarlık, vurgu metin; hover `bg-hover` |
+| Takip ediliyor | `#1DA1F2` zemin, beyaz metin | `#55ACEE` zemin, 1px `#3B88C3` kenarlık, beyaz metin | vurgu zemin, beyaz metin |
+| Takip ediliyor + hover (Unfollow) | `#E0245E` | `#BE1931` zemin, `#A0041E` kenarlık | dönemin kırmızısı |
+| Yazma | `#1DA1F2`, hover `#006DBF` | `#0084B4`, hover `#006A90` | vurgu, hover `accent-hover` |
+| Köşe | `100px` | `4px` | dönemin değeri |
+
+2014 yazma hover rengi (`#006A90`) kaynaktan değil, `#0084B4`'ten
+türetilmiştir (`docs/era-tokens.md`).
 
 ### 10.6 wording
 
@@ -501,6 +534,13 @@ Bir anahtarın dönemlere göre farklı değeri olabilir:
 
 `hideGrok`, `hidePremium`, `hideViewCounts`: ilgili çapalar
 `display: none`. Hiçbir şey silinmez.
+
+- `hideGrok`: menüdeki Grok bağlantısı, Grok çekmecesi, tweetlerdeki Grok
+  düğmesi (çeviriye bağlı olmamak için etiketle değil yapıyla bulunur).
+- `hidePremium`: menüdeki Premium sekmesi, yan sütundaki "Subscribe to
+  Premium" kutusu ve kendi profilindeki "Get verified" kartı (ikisi de
+  `premiumSidebar` çapasında).
+- `hideViewCounts`: tweet eylem satırındaki görüntülenme sayısı.
 
 ## 11. Diller
 

@@ -78,7 +78,7 @@
     "[data-testid=\"premium-signup-tab\"]"
   ],
   "premiumSidebar": [
-    "[data-testid=\"sidebarColumn\"] aside:has(a[href=\"/i/premium_sign_up\"])"
+    "[data-testid=\"sidebarColumn\"] aside:has(a[href=\"/i/premium_sign_up\"]), [data-testid=\"primaryColumn\"] div:has(> button + div > a[href=\"/i/premium_sign_up\"])"
   ],
   "viewCount": [
     "article [role=\"group\"] a[href$=\"/analytics\"]"

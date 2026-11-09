@@ -58,3 +58,55 @@ popup, rozet, favicon değişimi, Firefox, sohbet iframe'i, performans.
 Bilinen eksik (M2): X'in "Post" düğmesi açık temada siyah (`rgb(15, 20, 25)`)
 kalıyor; bu değer X'te başka koyu öğelerde de kullanıldığından renk eşlemesine
 değil, `SideNav_NewTweet_Button` çapasına bağlı düğme stiline bırakıldı.
+(M2'de düzeldi: aşağıdaki tabloda "Yazma düğmesi".)
+
+## M2 canlı kontrol sonuçları (2026-11-09)
+
+M1'deki gibi `tools/preview/` paketi giriş yapılmış x.com'da çalıştırıldı.
+Açık tema için X'in Ekran ayarı geçici olarak "Light" yapıldı, sonra
+"Lights out"a geri alındı. Değerler hesaplanmış stillerden, X'in 0.2s
+geçişleri bittikten sonra okundu.
+
+| Kontrol | 2017 gece | 2014 gece | 2017 açık | 2014 açık |
+|---|---|---|---|---|
+| Eşleşen palet girdisi | 28/28 | 28/28 | 28/28 | 28/28 |
+| Sayfa zemini | `#141D26` ✓ | `#141D26` ✓ | `#E6ECF0` ✓ | `#F5F8FA` ✓ |
+| Tweet metni | `#FFFFFF` ✓ | `#FFFFFF` ✓ | `#14171A` ✓ | `#292F33` ✓ |
+| 10 ikon maskeli, renk `currentColor` | ✓ eylem `#8899A6`, menü `#FFFFFF` | ✓ | ✓ eylem `#657786`, menü `#14171A` | ✓ eylem `#8899A6`, menü `#292F33` |
+| X'in ikon yolları gizli (opaklık 0) | ✓ | ✓ | ✓ | ✓ |
+| Beğenildi rengi (`like-active`)¹ | `#E0245E` ✓ | `#FFAC33` ✓ | `#E0245E` ✓ | `#FFAC33` ✓ |
+| Takip et: zemin / kenarlık / metin | `#1B2836` / `#1DA1F2` / `#1DA1F2` ✓ | aynı ✓ | `#FFFFFF` / `#1DA1F2` / `#1DA1F2` ✓ | `#F5F8FA`+gradyan / `#E1E8ED` / `#292F33` ✓ |
+| Yazma düğmesi | `#1DA1F2` ✓ | `#1DA1F2` ✓ | `#1DA1F2` ✓ | `#0084B4` ✓ |
+| Düğme köşesi | `100px` ✓ | `4px` ✓ | `100px` ✓ | `4px` ✓ |
+| Avatar köşesi | `50%` ✓ | `5px` ✓ | `50%` ✓ | `5px` ✓ |
+| Arama kutusu yuvarlak kalır | ✓ | `9999px` ✓ | ✓ | `9999px` ✓ |
+| Grok menü/çekmece/tweet düğmesi, Premium sekmesi/kutusu, görüntülenme sayısı gizli | ✓ | ✓ | ✓ | ✓ |
+
+¹ Zaman çizelgesinde beğenilmiş tweet yoktu ve hesapta beğeni yapılmadı:
+bir beğeni düğmesine X'in kendi beğenildi rengi (`color: rgb(249, 24, 128)`)
+satır içi olarak yazılıp ölçüldü, sonra eski haline getirildi.
+
+Gece temasında sayfa sayfa "X rengi sızıntısı" taraması (görünür öğelerde X'in
+ham gece renkleri: `rgb(231, 233, 234)`, `rgb(113, 118, 123)`, `rgb(0, 0, 0)`
+zemin, `rgb(47, 51, 54)` kenarlık vb.; video ve görseller hariç):
+
+| Sayfa | Sonuç |
+|---|---|
+| Ana sayfa | sızıntı yok (çapalar: menü, eylemler, avatar, yazma, Grok, Premium, görüntülenme) |
+| Tweet ayrıntısı | sızıntı yok; yanıt "Reply" düğmesi `composeSubmit` olarak boyandı, Takip et ✓ |
+| Profil | tek sızıntı: yeşil "You aren't verified yet / Get verified" kartı → `premiumSidebar` çapasına eklendi, artık gizli |
+| Bildirimler | sızıntı yok |
+
+Düzeltilenler: `selectors.json` `premiumSidebar` (profil kartı), `tokens.css`
+2014 gece `accent-hover-bg` (`#55ACEE` yerine o takımın vurgusu `#1DA1F2`'nin
+%10'u).
+
+Ölçülmeyenler: hover renklerinin ekranda değişimi (kurallar eşleşti, fare ile
+denenmedi), "Following"/Unfollow düğmesi (hesapta görünür bir örnek yoktu;
+birim ve görsel testlerle kapsandı), sohbet iframe'i, Firefox, gerçek eklenti
+yolu (`scripting.insertCSS`, popup, rozet). İkinci tur (profil, tweet,
+bildirimler) ikon şekilleri yerine yer tutucu maskeyle yapıldı; renk ve
+sızıntı ölçümü için yeterli, şekiller ana sayfada tam CSS ile doğrulandı.
+
+Bilinen eksikler: X'in yeni menü öğeleri (Calls, History, Creator Studio) ve
+paylaş/geri/yazma ikonları X'in ikonuyla kalıyor.
