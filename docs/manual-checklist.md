@@ -35,6 +35,14 @@ Her yayından önce Chrome ve Firefox'ta, X'e giriş yapılmış bir profille.
 - [ ] Bir tweeti beğen ve beğeniyi geri al: ikon dolu kalp/yıldıza geçip geri
       döner, renk dönemin beğeni rengi; aynısı birini takip edip bırakınca
       Takip et / Takip ediliyor düğmesi için.
+- [ ] Sözcükler (X arayüzü İngilizce ve Türkçe): sol menüdeki ve satır içi
+      "Post" → "Tweet", Repost menüsü → "Retweet", profil "Posts" → "Tweets";
+      tweet sayfasındaki yanıt düğmesi "Reply" kalır; dar pencerede menü
+      düğmesinde sözcük çıkmaz.
+- [ ] Popup sürüm satırında veri kaynağı: kurulumdan sonra "yerleşik veri",
+      `main`'de `data/remote.json` varsa ertesi gün "veri <sürüm>".
+- [ ] Firefox Android (Nightly, eklenti koleksiyonu ya da about:debugging ile):
+      x.com açılıyor, renkler ve logo değişiyor, popup açılıyor.
 - [ ] 2014 döneminde Ayarlar > Ekran: tema ve renk seçimindeki yuvarlak
       radyo düğmeleri ve renk daireleri kareleşiyor mu? Kareleşiyorsa
       `selectors.json` `radiusKeep`'e eklenmeli.
