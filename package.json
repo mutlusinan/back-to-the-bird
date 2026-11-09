@@ -23,12 +23,14 @@
     "typecheck": "tsc --noEmit",
     "postinstall": "wxt prepare",
     "icons": "node tools/build-icon-css.mjs",
-    "test:visual": "npm run build && vite build -c tools/preview/vite.config.ts && playwright test"
+    "test:visual": "npm run build && vite build -c tools/preview/vite.config.ts && playwright test",
+    "remote": "node tools/build-remote.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
     "happy-dom": "21.0.4",
     "typescript": "5.9.3",
+    "vite": "8.3.6",
     "vitest": "5.1.0",
     "wxt": "0.21.5"
   }

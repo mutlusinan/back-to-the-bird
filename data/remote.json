@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "dataVersion": "2026-11-09.1",
+  "minExtensionVersion": "1.0.0",
+  "maxExtensionVersion": null,
+  "selectors": {
+    "sideNavLogo": [
+      "header[role=\"banner\"] h1 a[href=\"/home\"]",
+      "header[role=\"banner\"] h1"
+    ],
+    "primaryColumn": [
+      "[data-testid=\"primaryColumn\"]"
+    ],
+    "sidebarColumn": [
+      "[data-testid=\"sidebarColumn\"]"
+    ],
+    "sidebarBox": [
+      "[data-testid=\"sidebarColumn\"] section[role=\"region\"], [data-testid=\"sidebarColumn\"] aside[role=\"complementary\"]",
+      "[data-testid=\"sidebarColumn\"] section, [data-testid=\"sidebarColumn\"] aside"
+    ],
+    "radiusKeep": [
+      "[data-testid=\"SearchBox_Search_Input_label\"], [data-testid=\"SearchBox_Search_Input_label\"] div, [role=\"switch\"], [role=\"switch\"] *"
+    ],
+    "navHome": [
+      "[data-testid=\"AppTabBar_Home_Link\"]"
+    ],
+    "navExplore": [
+      "[data-testid=\"AppTabBar_Explore_Link\"]"
+    ],
+    "navNotifications": [
+      "[data-testid=\"AppTabBar_Notifications_Link\"]"
+    ],
+    "navMessages": [
+      "[data-testid=\"AppTabBar_DirectMessage_Link\"]"
+    ],
+    "navProfile": [
+      "[data-testid=\"AppTabBar_Profile_Link\"]"
+    ],
+    "navMore": [
+      "[data-testid=\"AppTabBar_More_Menu\"]"
+    ],
+    "actionReply": [
+      "article [data-testid=\"reply\"]"
+    ],
+    "actionRetweet": [
+      "article :is([data-testid=\"retweet\"],[data-testid=\"unretweet\"])"
+    ],
+    "actionLike": [
+      "article [data-testid=\"like\"]"
+    ],
+    "actionLiked": [
+      "article [data-testid=\"unlike\"]"
+    ],
+    "actionBookmark": [
+      "article :is([data-testid=\"bookmark\"],[data-testid=\"removeBookmark\"])"
+    ],
+    "avatar": [
+      "[data-testid^=\"UserAvatar-Container-\"]"
+    ],
+    "followButton": [
+      "[data-testid$=\"-follow\"]"
+    ],
+    "unfollowButton": [
+      "[data-testid$=\"-unfollow\"]"
+    ],
+    "composeButton": [
+      "[data-testid=\"SideNav_NewTweet_Button\"]"
+    ],
+    "composeSubmit": [
+      ":is([data-testid=\"tweetButtonInline\"],[data-testid=\"tweetButton\"])"
+    ],
+    "grokNav": [
+      "header[role=\"banner\"] nav a[href=\"/i/grok\"]"
+    ],
+    "grokDrawer": [
+      "[data-testid=\"GrokDrawer\"]"
+    ],
+    "grokTweetButton": [
+      "article div:has(> div > [data-testid=\"caret\"]) > div > button:not([data-testid])",
+      "button[aria-label=\"Grok actions\"]"
+    ],
+    "premiumNav": [
+      "[data-testid=\"premium-signup-tab\"]"
+    ],
+    "premiumSidebar": [
+      "[data-testid=\"sidebarColumn\"] aside:has(a[href=\"/i/premium_sign_up\"]), [data-testid=\"primaryColumn\"] div:has(> button + div > a[href=\"/i/premium_sign_up\"])"
+    ],
+    "viewCount": [
+      "article [role=\"group\"] a[href$=\"/analytics\"]"
+    ],
+    "wordComposeButton": [
+      "[data-testid=\"SideNav_NewTweet_Button\"]"
+    ],
+    "wordComposeSubmit": [
+      "[data-testid=\"primaryColumn\"]:not(:has([data-testid=\"inline_reply_offscreen\"])) [data-testid=\"tweetButtonInline\"], [role=\"dialog\"]:not(:has(article)) [data-testid=\"tweetButton\"]"
+    ],
+    "wordRepostAction": [
+      "[data-testid=\"retweetConfirm\"]"
+    ],
+    "wordUndoRepostAction": [
+      "[data-testid=\"unretweetConfirm\"]"
+    ],
+    "wordQuoteAction": [
+      "[role=\"menu\"] a[role=\"menuitem\"][href=\"/compose/post\"]"
+    ],
+    "wordRepostsLabel": [
+      "a[role=\"tab\"]:is([href$=\"/retweets\"], [href$=\"/reposts\"])"
+    ],
+    "wordQuotesLabel": [
+      "a[role=\"tab\"][href$=\"/quotes\"]"
+    ],
+    "wordLikesLabel": [
+      "a[role=\"tab\"][href$=\"/likes\"]"
+    ],
+    "wordProfilePostsTab": [
+      "[data-testid=\"primaryColumn\"]:has([data-testid=\"UserName\"]) [role=\"tablist\"] [role=\"presentation\"]:first-child > a[role=\"tab\"]"
+    ]
+  },
+  "paletteMap": {
+    "version": 2,
+    "light": {
+      "color": {
+        "rgb(15, 20, 25)": "text",
+        "rgb(83, 100, 113)": "text-2",
+        "rgb(29, 155, 240)": "accent",
+        "rgb(249, 24, 128)": "like-active",
+        "rgb(0, 186, 124)": "retweet-active"
+      },
+      "background-color": {
+        "rgb(255, 255, 255)": "bg-card",
+        "rgb(247, 249, 249)": "bg-hover",
+        "rgb(29, 155, 240)": "accent",
+        "rgba(249, 24, 128, 0.1)": "like-hover-bg",
+        "rgba(0, 186, 124, 0.1)": "retweet-hover-bg",
+        "rgba(29, 155, 240, 0.1)": "accent-hover-bg"
+      },
+      "border-color": {
+        "rgb(239, 243, 244)": "border",
+        "rgb(207, 217, 222)": "border"
+      }
+    },
+    "night": {
+      "color": {
+        "rgb(231, 233, 234)": "text",
+        "rgb(113, 118, 123)": "text-2",
+        "rgb(29, 155, 240)": "accent",
+        "rgb(249, 24, 128)": "like-active",
+        "rgb(0, 186, 124)": "retweet-active"
+      },
+      "background-color": {
+        "rgb(0, 0, 0)": "bg-card",
+        "rgb(22, 24, 28)": "bg-hover",
+        "rgb(29, 155, 240)": "accent",
+        "rgba(249, 24, 128, 0.1)": "like-hover-bg",
+        "rgba(0, 186, 124, 0.1)": "retweet-hover-bg",
+        "rgba(29, 155, 240, 0.1)": "accent-hover-bg"
+      },
+      "border-color": {
+        "rgb(47, 51, 54)": "border",
+        "rgb(83, 100, 113)": "border"
+      }
+    },
+    "font-family": {
+      "TwitterChirp": "font"
+    },
+    "font-size": {
+      "15px": "fs-body"
+    },
+    "border-radius": {
+      "9999px": "radius-pill",
+      "16px": "radius-media"
+    },
+    "xTokens": {
+      "light": {
+        "--x-bg-primary": "bg-card",
+        "--x-bg-modal": "bg-card",
+        "--x-bg-sheets": "bg-card",
+        "--x-bg-secondary": "bg-hover",
+        "--x-hover-subtle": "bg-hover",
+        "--x-fg-primary": "text",
+        "--x-fg-secondary": "text-2",
+        "--x-fg-brand": "accent",
+        "--x-btn-brand": "accent",
+        "--x-btn-brand-hover": "accent-hover",
+        "--x-btn-brand-pressed": "accent-hover",
+        "--x-border-divider": "border",
+        "--x-border-normal": "border",
+        "--x-font-sans": "font"
+      },
+      "night": {
+        "--x-bg-primary": "bg-card",
+        "--x-bg-modal": "bg-card",
+        "--x-bg-sheets": "bg-card",
+        "--x-bg-secondary": "bg-hover",
+        "--x-hover-subtle": "bg-hover",
+        "--x-fg-primary": "text",
+        "--x-fg-secondary": "text-2",
+        "--x-fg-brand": "accent",
+        "--x-btn-brand": "accent",
+        "--x-btn-brand-hover": "accent-hover",
+        "--x-btn-brand-pressed": "accent-hover",
+        "--x-border-divider": "border",
+        "--x-border-normal": "border",
+        "--x-font-sans": "font"
+      }
+    }
+  },
+  "wording": {
+    "en": {
+      "composeButton": "Tweet",
+      "composeSubmit": "Tweet",
+      "repostAction": "Retweet",
+      "undoRepostAction": "Undo Retweet",
+      "quoteAction": null,
+      "repostsLabel": "Retweets",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "Favorites",
+        "2017": null
+      },
+      "profilePostsTab": "Tweets"
+    }
+  },
+  "disabledFeatures": []
+}
