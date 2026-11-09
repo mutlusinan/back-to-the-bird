@@ -190,3 +190,5 @@ grubunun (`[role="group"]`) son düğmesi.
 
 Etkin durum renkleri (kural tablosunda): beğeni `rgb(249, 24, 128)`, retweet
 `rgb(0, 186, 124)`.
+
+Durum renkleri kaynağı: `#react-native-stylesheet` kuralları — beğeni `rgb(249, 24, 128)` (hover zemini `rgba(249, 24, 128, 0.1)`), retweet `rgb(0, 186, 124)` (`rgba(0, 186, 124, 0.1)`), vurgu hover zemini `rgba(29, 155, 240, 0.1)`; iki temada aynı değerler.

@@ -77,3 +77,12 @@ test('rejects a non-object input', () => {
 test('the bundled palette map parses', () => {
   expect(() => parsePaletteMap(paletteMapJson)).not.toThrow();
 });
+
+test('the bundled map carries like and retweet state colors', () => {
+  const bundled = parsePaletteMap(paletteMapJson);
+  expect(bundled.light.color?.['rgb(249, 24, 128)']).toBe('like-active');
+  expect(bundled.night.color?.['rgb(0, 186, 124)']).toBe('retweet-active');
+  expect(bundled.night['background-color']?.['rgba(0, 186, 124, 0.1)']).toBe('retweet-hover-bg');
+  expect(bundled.light['background-color']?.['rgba(249, 24, 128, 0.1)']).toBe('like-hover-bg');
+  expect(bundled.light['background-color']?.['rgba(29, 155, 240, 0.1)']).toBe('accent-hover-bg');
+});
