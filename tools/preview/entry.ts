@@ -14,6 +14,8 @@ import { parsePaletteMap } from '../../src/engine/palette-map';
 import type { EngineFeature } from '../../src/engine/remap';
 import { SheetScanner } from '../../src/engine/scan';
 import { DOM_FEATURES, runFeatures } from '../../src/features/registry';
+import { wordingCss } from '../../src/wording/css';
+import { wordingTableFor } from '../../src/wording/tables';
 
 const ENGINE_FEATURES: readonly EngineFeature[] = ['palette', 'font', 'typeScale', 'radius'];
 const map = parsePaletteMap(paletteMapJson);
@@ -52,6 +54,14 @@ export async function run(staticCss: string, opts: { era?: Era } = {}) {
   const domActive = runFeatures({ table, doc: document, health }, new Set(DOM_FEATURES.map((f) => f.id)));
   const engineActive = IMPLEMENTED_FEATURES.filter((id) => (ENGINE_FEATURES as readonly string[]).includes(id));
   applyHtmlAttributes(document.documentElement, settings, theme, new Set<FeatureId>([...engineActive, ...domActive]));
+  let words = document.querySelector<HTMLStyleElement>('style[data-ot="wording"]');
+  if (!words) {
+    words = document.createElement('style');
+    words.setAttribute('data-ot', 'wording');
+    document.head.append(words);
+  }
+  const wordTable = wordingTableFor(document.documentElement.lang);
+  words.textContent = domActive.has('wording') && wordTable ? wordingCss(wordTable) : '';
   while (await engine.tick());
   return { theme, active: [...domActive], health: health.snapshot(), cssChars: style?.textContent?.length ?? 0, matched: [...engine.matchedKeys()] };
 }
