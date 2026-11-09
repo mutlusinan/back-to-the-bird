@@ -29,3 +29,8 @@ test('watchSettings reports saved settings', async () => {
   stop();
   expect(seen).toEqual([false]);
 });
+
+test('a stored 2014 era is kept', async () => {
+  await fakeBrowser.storage.sync.set({ 'ot:settings': { era: '2014', features: {} } });
+  expect((await loadSettings()).era).toBe('2014');
+});

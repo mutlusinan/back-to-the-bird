@@ -117,3 +117,11 @@ test('after the grace period a missing anchor shows on the badge', async () => {
   await sleep(120);
   expect(sent).toContainEqual({ type: 'ot:badge', level: 'warn' });
 });
+
+test('an era change in the popup applies without reload', async () => {
+  running = await main({ doc: document, win: window });
+  await sleep(80);
+  await saveSettings({ ...DEFAULT_SETTINGS, era: '2014' });
+  await sleep(40);
+  expect(html().getAttribute('data-ot-era')).toBe('2014');
+});

@@ -2,7 +2,7 @@ import { browser, type Browser } from 'wxt/browser';
 import { SHOW_ORIGINAL_PORT, type HealthResponse } from '../../core/messages';
 import { buildReport } from '../../core/report';
 import { loadSettings, saveSettings } from '../../core/settings';
-import { healthRows, toggleRows, withFeature } from './model';
+import { eraOptions, healthRows, showEraSelector, toggleRows, withEra, withFeature } from './model';
 
 // Keys are composed at runtime (e.g. `status_${status}`), so the generated literal union does not apply.
 const getMessage = browser.i18n.getMessage as (key: string) => string;
@@ -39,6 +39,23 @@ async function renderToggles(): Promise<void> {
     const item = document.createElement('li');
     item.append(label);
     list.append(item);
+  }
+}
+
+async function renderEras(): Promise<void> {
+  const section = byId<HTMLElement>('eraSection');
+  section.hidden = !showEraSelector();
+  const group = byId<HTMLDivElement>('eras');
+  group.replaceChildren();
+  for (const option of eraOptions(await loadSettings())) {
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'era';
+    input.checked = option.selected;
+    input.addEventListener('change', async () => input.checked && saveSettings(withEra(await loadSettings(), option.era)));
+    const label = document.createElement('label');
+    label.append(input, t(option.labelKey));
+    group.append(label);
   }
 }
 
@@ -84,6 +101,7 @@ function bindShowOriginal(tab: Browser.tabs.Tab | undefined): void {
 
 async function init(): Promise<void> {
   byId('title').textContent = t('extName');
+  byId('eraTitle').textContent = t('eraTitle');
   byId('featuresTitle').textContent = t('featuresTitle');
   byId('healthTitle').textContent = t('healthTitle');
   byId('showOriginal').textContent = t('showOriginal');
@@ -92,6 +110,7 @@ async function init(): Promise<void> {
 
   const tab = await activeXTab();
   const response = await fetchHealth(tab);
+  await renderEras();
   await renderToggles();
   renderHealth(response);
   bindShowOriginal(tab);

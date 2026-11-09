@@ -33,7 +33,7 @@ export const IMPLEMENTED_FEATURES: readonly FeatureId[] = ['palette', 'font', 's
 
 export type Era = '2014' | '2017';
 
-export const AVAILABLE_ERAS: readonly Era[] = ['2017'];
+export const AVAILABLE_ERAS: readonly Era[] = ['2014', '2017'];
 
 export const ENGINE_BUDGET_MS = 4;
 

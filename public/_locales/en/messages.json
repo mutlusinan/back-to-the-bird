@@ -55,5 +55,14 @@
   },
   "unreadableSheets": {
     "message": "stylesheets not readable"
+  },
+  "eraTitle": {
+    "message": "Era"
+  },
+  "era2014": {
+    "message": "2014–2016"
+  },
+  "era2017": {
+    "message": "2017–2019"
   }
 }

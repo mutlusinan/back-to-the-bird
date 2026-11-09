@@ -1,4 +1,4 @@
-import { AVAILABLE_ERAS, IMPLEMENTED_FEATURES, type FeatureId } from '../../config';
+import { AVAILABLE_ERAS, IMPLEMENTED_FEATURES, type Era, type FeatureId } from '../../config';
 import type { FeatureStatus } from '../../core/health';
 import type { HealthResponse } from '../../core/messages';
 import type { Settings } from '../../core/settings';
@@ -23,6 +23,20 @@ export function toggleRows(s: Settings): ToggleRow[] {
 
 export function withFeature(s: Settings, id: FeatureId, on: boolean): Settings {
   return { ...s, features: { ...s.features, [id]: on } };
+}
+
+export interface EraOption {
+  era: Era;
+  labelKey: string;
+  selected: boolean;
+}
+
+export function eraOptions(s: Settings): EraOption[] {
+  return AVAILABLE_ERAS.map((era) => ({ era, labelKey: `era${era}`, selected: s.era === era }));
+}
+
+export function withEra(s: Settings, era: Era): Settings {
+  return { ...s, era };
 }
 
 /** The style engine itself: errors outside any feature, or no readable stylesheet at all. */

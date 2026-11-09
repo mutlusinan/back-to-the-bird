@@ -55,5 +55,14 @@
   },
   "unreadableSheets": {
     "message": "stil sayfaları okunamıyor"
+  },
+  "eraTitle": {
+    "message": "Dönem"
+  },
+  "era2014": {
+    "message": "2014–2016"
+  },
+  "era2017": {
+    "message": "2017–2019"
   }
 }

@@ -1,6 +1,6 @@
 import { DEFAULT_SETTINGS } from '../../src/core/settings';
 import type { HealthResponse } from '../../src/core/messages';
-import { healthRows, showEraSelector, toggleRows, withFeature } from '../../src/entrypoints/popup/model';
+import { eraOptions, healthRows, showEraSelector, toggleRows, withEra, withFeature } from '../../src/entrypoints/popup/model';
 
 const response = (over: Partial<HealthResponse['snapshot']> = {}): HealthResponse => ({
   snapshot: { features: {}, paletteMisses: [], sheets: { readable: 1, unreadable: 0 }, errors: [], ...over },
@@ -43,8 +43,21 @@ test('palette misses make the palette row warn', () => {
   expect(rows.find((r) => r.labelKey === 'featurePalette')).toEqual({ labelKey: 'featurePalette', status: 'warn', detail: 'light:color:accent' });
 });
 
-test('the era selector stays hidden while only one era exists', () => {
-  expect(showEraSelector()).toBe(false);
+test('the era selector is shown once two eras exist', () => {
+  expect(showEraSelector()).toBe(true);
+});
+
+test('era options mark the current era', () => {
+  expect(eraOptions(DEFAULT_SETTINGS)).toEqual([
+    { era: '2014', labelKey: 'era2014', selected: false },
+    { era: '2017', labelKey: 'era2017', selected: true },
+  ]);
+});
+
+test('withEra returns a new settings object', () => {
+  const next = withEra(DEFAULT_SETTINGS, '2014');
+  expect(next.era).toBe('2014');
+  expect(DEFAULT_SETTINGS.era).toBe('2017');
 });
 
 test('the first row reports the style engine itself', () => {
