@@ -12,7 +12,17 @@ import type { FeatureId } from '../../src/config';
 
 const table = parseSelectorTable(selectorsJson);
 const map = parsePaletteMap(paletteMapJson);
-const DOM_ANCHORS = [...new Set(DOM_FEATURES.flatMap((f) => [...f.requires, ...f.optional]))];
+/** Controls that never exist on the home page: menus open on demand, tabs live on profile and engagement pages. */
+const OFF_HOME = new Set<string>([
+  'wordRepostAction',
+  'wordUndoRepostAction',
+  'wordQuoteAction',
+  'wordRepostsLabel',
+  'wordQuotesLabel',
+  'wordLikesLabel',
+  'wordProfilePostsTab',
+]);
+const DOM_ANCHORS = [...new Set(DOM_FEATURES.flatMap((f) => [...f.requires, ...f.optional]))].filter((a) => !OFF_HOME.has(a));
 
 function load(file: string, dir: 'ltr' | 'rtl' = 'ltr'): void {
   const html = readFileSync(`tests/fixtures/${file}`, 'utf8');

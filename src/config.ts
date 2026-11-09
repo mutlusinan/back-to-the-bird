@@ -39,6 +39,7 @@ export const IMPLEMENTED_FEATURES: readonly FeatureId[] = [
   'icons',
   'avatar',
   'followButton',
+  'wording',
   'hideGrok',
   'hidePremium',
   'hideViewCounts',

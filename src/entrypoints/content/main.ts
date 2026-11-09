@@ -20,6 +20,9 @@ import { missingXTokens } from '../../engine/xtokens';
 import { retagElement, tagAdded } from '../../core/anchors';
 import { removeFavicon } from '../../features/branding/favicon';
 import { DOM_FEATURES, runFeatures } from '../../features/registry';
+import { wordingCss } from '../../wording/css';
+import { normalizeLang } from '../../wording/table';
+import { wordingTableFor } from '../../wording/tables';
 
 const ENGINE_FEATURES: readonly FeatureId[] = ['palette', 'font', 'typeScale', 'radius'];
 const LAST_THEME_KEY = 'ot:lastTheme';
@@ -134,6 +137,18 @@ export async function main({
   });
   await engine.start().catch((err) => health.error('core', err));
 
+  // Words are a separate stylesheet: they depend on X's interface language, not on the engine's
+  // rules, and both eras are in it (attribute-scoped), so only a language change rebuilds it.
+  const injectWording = createInjector(doc, send, handOver);
+  let wordingLang = '';
+  const syncWording = () => {
+    const lang = domActive.has('wording') ? normalizeLang(html.lang) : '';
+    if (lang === wordingLang) return;
+    wordingLang = lang;
+    const words = lang ? wordingTableFor(lang) : null;
+    void injectWording(words ? wordingCss(words) : '');
+  };
+
   const setTheme = (next: Theme) => {
     if (next === theme) return;
     theme = next;
@@ -183,6 +198,7 @@ export async function main({
           featuresDirty = false;
           domActive = runFeatures({ table, doc, health }, enabled());
           applyAttributes();
+          syncWording();
         }
       }
       let more = false;
@@ -205,6 +221,16 @@ export async function main({
   scheduler.start();
   scheduler.poke();
   cleanups.push(() => scheduler.stop());
+
+  if (isTop) {
+    // X sets its interface language on <html lang>; a change re-decides wording.
+    const langObserver = new MutationObserver(() => {
+      featuresDirty = true;
+      scheduler.poke();
+    });
+    langObserver.observe(html, { attributes: true, attributeFilter: ['lang'] });
+    cleanups.push(() => langObserver.disconnect());
+  }
 
   cleanups.push(
     watchSettings((next) => {

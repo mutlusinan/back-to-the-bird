@@ -15,6 +15,8 @@ export interface Feature {
   requires: readonly AnchorName[];
   /** Tagged when present; their absence is normal on some pages. */
   optional: readonly AnchorName[];
+  /** A reason the feature cannot run on this page (health: unavailable), or null. */
+  unavailable?(ctx: FeatureContext): string | null;
   apply(ctx: FeatureContext): void;
   cleanup(ctx: FeatureContext): void;
 }

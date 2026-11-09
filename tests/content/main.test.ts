@@ -147,6 +147,52 @@ test('a follow button that becomes "following" switches anchors', async () => {
   expect(button.getAttribute('data-ot')).toBe('unfollowButton');
 });
 
+describe('wording', () => {
+  const wordingCss = () => sent.filter((m) => m.type === 'ot:css' && m.css.includes('content:"Tweet"'));
+  beforeEach(() => {
+    html().lang = 'en';
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      '<a data-testid="SideNav_NewTweet_Button" href="/compose/post"><span><span>Post</span></span></a>',
+    );
+  });
+  afterEach(() => html().removeAttribute('lang'));
+
+  test('an English page gets the old words and the wording attribute', async () => {
+    running = await main({ doc: document, win: window });
+    await sleep(80);
+    expect(html().hasAttribute('data-ot-f-wording')).toBe(true);
+    expect(wordingCss()).toHaveLength(1);
+  });
+
+  test('switching wording off in the popup removes the attribute and the words', async () => {
+    running = await main({ doc: document, win: window });
+    await sleep(80);
+    await saveSettings({ ...DEFAULT_SETTINGS, features: { ...DEFAULT_SETTINGS.features, wording: false } });
+    await sleep(80);
+    expect(html().hasAttribute('data-ot-f-wording')).toBe(false);
+    const last = sent.filter((m) => m.type === 'ot:css' && m.previous?.includes('content:"Tweet"')).at(-1);
+    expect(last && last.type === 'ot:css' && last.css).toBe('');
+  });
+
+  test('X switching to a language without a table drops the attribute', async () => {
+    running = await main({ doc: document, win: window });
+    await sleep(80);
+    html().lang = 'xx';
+    await sleep(80);
+    expect(html().hasAttribute('data-ot-f-wording')).toBe(false);
+  });
+
+  test('an era change needs no new wording css', async () => {
+    running = await main({ doc: document, win: window });
+    await sleep(80);
+    await saveSettings({ ...DEFAULT_SETTINGS, era: '2014' });
+    await sleep(80);
+    expect(html().getAttribute('data-ot-era')).toBe('2014');
+    expect(wordingCss()).toHaveLength(1);
+  });
+});
+
 test('a follow flip in the same frame as a page change still drops the old anchor', async () => {
   document.body.insertAdjacentHTML('beforeend', '<button data-testid="1-follow" id="fb"></button>');
   running = await main({ doc: document, win: window });

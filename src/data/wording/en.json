@@ -1,0 +1,11 @@
+{
+  "composeButton": "Tweet",
+  "composeSubmit": "Tweet",
+  "repostAction": "Retweet",
+  "undoRepostAction": "Undo Retweet",
+  "quoteAction": null,
+  "repostsLabel": "Retweets",
+  "quotesLabel": null,
+  "likesLabel": { "2014": "Favorites", "2017": null },
+  "profilePostsTab": "Tweets"
+}

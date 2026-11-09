@@ -7,6 +7,7 @@ import { hideGrok, hidePremium, hideViewCounts } from './hide';
 import { icons } from './icons';
 import { radius } from './radius';
 import { surfaces } from './surfaces';
+import { wording } from './wording';
 import type { Feature, FeatureContext } from './types';
 
 export const DOM_FEATURES: readonly Feature[] = [
@@ -16,6 +17,7 @@ export const DOM_FEATURES: readonly Feature[] = [
   icons,
   avatar,
   buttons,
+  wording,
   hideGrok,
   hidePremium,
   hideViewCounts,
@@ -43,6 +45,12 @@ export function runFeatures(ctx: FeatureContext, enabled: ReadonlySet<FeatureId>
         continue;
       }
       cleanedUp.delete(feature.id);
+      const reason = feature.unavailable?.(ctx) ?? null;
+      if (reason !== null) {
+        feature.cleanup(ctx);
+        ctx.health.setFeature(feature.id, 'unavailable', reason);
+        continue;
+      }
       const found = tagAnchors(ctx.table, [...feature.requires, ...feature.optional], ctx.doc);
       const missing = feature.requires.filter((name) => !found.has(name));
       if (missing.length > 0) {

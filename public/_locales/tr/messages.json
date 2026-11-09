@@ -80,6 +80,9 @@
   "featureFollowButton": {
     "message": "Takip et ve Tweet düğmeleri"
   },
+  "featureWording": {
+    "message": "Eski sözcükler (Tweet, Retweet)"
+  },
   "featureHideGrok": {
     "message": "Grok'u gizle"
   },

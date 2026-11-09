@@ -80,6 +80,9 @@
   "featureFollowButton": {
     "message": "Follow and Tweet buttons"
   },
+  "featureWording": {
+    "message": "Old words (Tweet, Retweet)"
+  },
   "featureHideGrok": {
     "message": "Hide Grok"
   },
