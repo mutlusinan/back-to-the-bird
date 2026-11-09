@@ -52,8 +52,21 @@ test('parseSelectorTable rejects an empty list', () => {
   expect(() => parseSelectorTable({ ...table(), primaryColumn: [] })).toThrow();
 });
 
-test('parseSelectorTable rejects an invalid selector', () => {
-  expect(() => parseSelectorTable({ ...table(), primaryColumn: ['div[['] })).toThrow();
+test('a selector this browser cannot parse is dropped and the rest of its anchor is kept', () => {
+  const parsed = parseSelectorTable({ ...table(), primaryColumn: ['div[[', 'main'] });
+  expect(parsed.primaryColumn).toEqual(['main']);
+  expect(parsed.sidebarColumn).toEqual(table().sidebarColumn);
+});
+
+test('an anchor whose every selector fails to parse finds nothing instead of stopping the skin', () => {
+  const parsed = parseSelectorTable({ ...table(), primaryColumn: ['div[['] });
+  expect(parsed.primaryColumn).toEqual([]);
+  document.body.innerHTML = '<main></main>';
+  expect(findAll(parsed, 'primaryColumn', document)).toEqual([]);
+});
+
+test('parseSelectorTable rejects a selector that is not a string', () => {
+  expect(() => parseSelectorTable({ ...table(), primaryColumn: [7] })).toThrow();
 });
 
 test('the bundled selector table parses', () => {

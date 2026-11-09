@@ -78,7 +78,7 @@ export const ANCHOR_NAMES: readonly AnchorName[] = [
   'wordProfilePostsTab',
 ];
 
-/** Validates an untrusted selector table; every selector must parse. */
+/** Validates an untrusted selector table; selectors this browser cannot parse are dropped. */
 export function parseSelectorTable(json: unknown): SelectorTable {
   if (typeof json !== 'object' || json === null || Array.isArray(json)) {
     throw new Error('selector table must be an object');
@@ -94,9 +94,17 @@ export function parseSelectorTable(json: unknown): SelectorTable {
     if (!Array.isArray(list) || list.length === 0) throw new Error(`anchor ${name} needs selectors`);
     for (const selector of list) {
       if (typeof selector !== 'string') throw new Error(`anchor ${name}: selector must be a string`);
-      probe.querySelector(selector); // throws on invalid syntax
     }
-    table[name] = [...(list as string[])];
+    // A selector this browser cannot parse (newer syntax, or a typo in remote data) is dropped on
+    // its own: the anchor falls back to its other selectors and every other anchor keeps working.
+    table[name] = (list as string[]).filter((selector) => {
+      try {
+        probe.querySelector(selector);
+        return true;
+      } catch {
+        return false;
+      }
+    });
   }
   return table;
 }
