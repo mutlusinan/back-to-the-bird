@@ -56,3 +56,61 @@ tahmin edilenler işaretli. Eklentinin `2017` dönemi **açık tema** ve
 - Medya köşesi 5px → 12px: `…/20181001id_/…/a/1538144154/…` ve `…/20181115id_/…/a/1542244373/…`
 - Kullanıcı rengi bloğu (varsayılan mavi): `https://web.archive.org/web/20180621040006id_/https://twitter.com/Policy`
 - Renk sabitleri ve karıştırma: `https://web.archive.org/web/2018id_/https://abs.twimg.com/k/fil/0.commons.fil.90b88b9764641d881cbb.js`
+
+# Dönem token'ları — 2014–2016
+
+Arşivlenmiş `twitter_core` / `twitter_more_*` paketlerinden (Ekim 2015, Kasım
+2015, Şubat 2016, Mayıs 2016; Mayıs 2017 karşılaştırma). Bu dönemde web'de gece
+modu yoktu; `2014-night` renklerini `2017-night`'tan alır, renk dışı token'lar
+2014 değerinde kalır (spec §3.2).
+
+**Temsil anı: Ekim 2015** (`/a/1443442549/`, snapshot 20151002053416).
+Dönem içi değişiklikler: yıldız → kalp 2015-10-02 ile 2015-11-08 arasında;
+`#55ACEE` → `#1DA1F2` 2016-02-01 ile 2016-02-27 arasında; metin `#292F33`
+Mayıs 2016'da hâlâ vardı. Ekim 2015 yıldız, `#55ACEE` ve `#292F33`'ün bir arada
+olduğu son tutarlı an.
+
+| Token | 2014-light | Kaynak seçici |
+|---|---|---|
+| `bg-page` | `#F5F8FA` | `body{background-color:#f5f8fa}` (aynı dosyada `#fff`'yi ezen kural) |
+| `bg-card` | `#FFFFFF` | `.stream-item`, `.module .flex-module`, `.global-nav-inner` |
+| `bg-hover` | `#F5F8FA` | `.tweet:hover` |
+| `text` | `#292F33` | `body`, `.fullname` |
+| `text-2` | `#8899A6` | `.username`, `.time`, `.metadata` |
+| `border` | `#E1E8ED` | `.tweet{border-bottom}`, `.stream-item` kenarları |
+| `accent` | `#55ACEE` | `.primary-btn{background-color}` |
+| `accent-hover` | `#3B88C3` | `.primary-btn` kenarlığı / `:active` zemini |
+| `link` | `#0084B4` | 2015 varsayılan kullanıcı rengi (`.tweet-btn`, `#global-actions`); paket `a{color:#2b7bb9}` |
+| `font` | `"Helvetica Neue", Helvetica, Arial, sans-serif` | `body`; Windows `body.ms-windows{Arial}` |
+| `fs-body` | `14px` (satır 18px) | `body`, `.TweetTextSize` |
+| `radius-pill` | `4px` | `.btn{border-radius:4px}` (hap değil) |
+| `radius-media` | `5px` | `.AdaptiveMedia` |
+| `avatar-radius` | `5px` | `.avatar` (48px); 128/96px `6px`, 32px `4px`, profil başlığı `12px` |
+
+## Bileşenler
+
+| Bileşen | 2014 (Ekim 2015) | 2017 (2018 paketi) |
+|---|---|---|
+| Takip et (takip edilmiyor) | zemin `#F5F8FA` + `linear-gradient(#fff,#f5f8fa)`, kenarlık `1px #E1E8ED`, metin `#292F33`, köşe 4px; hover `#E1E8ED` + `linear-gradient(#fff,#e1e8ed)` | `EdgeButton--secondary`: zemin `#FFF`, kenarlık `1px #1DA1F2`, metin `#1DA1F2`, köşe 100px; hover `#EAF5FD` |
+| Takip ediliyor | `.primary-btn`: zemin `#55ACEE`, kenarlık `#3B88C3`, metin `#FFF` | `EdgeButton--primary`: zemin/kenarlık `#1DA1F2`, metin `#FFF`; hover `#006DBF` |
+| Takipten çık (hover) | `.caution-btn`: zemin `#BE1931`, kenarlık `#A0041E`, metin `#FFF` | `EdgeButton--danger`: zemin/kenarlık `#E0245E`, metin `#FFF`; hover `#AC002B` |
+| Tweet düğmesi (üst bar) | `.tweet-btn`: zemin `#0084B4`, metin `#FFF`, köşe 4px; hover koyulaştıran degrade | `EdgeButton--primary`: `#1DA1F2`, hover `#006DBF`, köşe 100px |
+| Eylem ikonu (normal) | `#CCD6DD` | `#657786` |
+| Yanıt hover | kullanıcı rengi (`#0084B4`) | `#1DA1F2` |
+| Retweet hover / retweetlendi | `#5C913B` | `#17BF63` |
+| Beğeni hover / beğenildi | yıldız `#FFAC33` | kalp `#E0245E` |
+| Gezinme ikonu | `#66757F`, hover/etkin `#0084B4` + 5px alt çizgi | `#66757F`, hover/etkin `#1C94E0` + 2px alt çizgi |
+| Onay rozeti | `#88C9F9` | `#1DA1F2` |
+
+Gece temasında düğme renkleri için arşivde ayrı bir kaynak okunmadı;
+`2014-night` ve `2017-night` düğmeleri gece kart rengi üzerinde aynı vurgu
+mantığını kullanır (çıkarım).
+
+## Kaynaklar (2014–2016)
+
+- Ekim 2015: `https://web.archive.org/web/20151002053416id_/https://abs.twimg.com/a/1443442549/css/t1/twitter_core.bundle.css` (+ `twitter_more_1`, `twitter_more_2`)
+- Kasım 2015 (kalp): `…/web/20151108162716id_/https://abs.twimg.com/a/1446686284/css/t1/twitter_core.bundle.css`
+- Şubat 2016 (`#1DA1F2`): `…/web/20160229235943id_/https://abs.twimg.com/a/1456544917/css/t1/twitter_core.bundle.css`
+- Mayıs 2016: `…/web/20160529205426id_/https://abs.twimg.com/a/1464326506/css/t1/twitter_core.bundle.css`
+- Mayıs 2017 (sınır): `…/web/20170503000000id_/https://abs.twimg.com/a/1493832501/css/t1/twitter_core.bundle.css`
+- 2018 bileşenleri: `…/web/20180823204119id_/https://abs.twimg.com/a/1527289941/css/t1/twitter_core.bundle.css`

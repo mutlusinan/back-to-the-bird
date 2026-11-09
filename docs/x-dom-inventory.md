@@ -137,3 +137,56 @@ içeriği incelenemedi. Sonuç: içerik betiği iframe'lerde de çalışmalı
 | `data-testid` çapaları mevcut | **doğru** (§7) |
 | Sözcük etiketleri ayrı `<span>`'lerde | M3'te |
 | `html[lang]` arayüz dilini gösteriyor | **doğru** (`lang="en"`) |
+
+## 10. M2 çapaları (2026-11-09, masaüstü 1280px, Lights Out)
+
+### İkonlar
+
+Bütün gezinme ve eylem ikonları tek bir `<svg>` (tek `<path>`), her zaman
+`öğe > div > div > svg`; `fill` hesaplanmış olarak `currentColor`'a eşit,
+satır içi stil yok. Gezinme ikonları 26.25px, eylem ikonları 18.75px.
+
+| Çapa | Seçici | Not |
+|---|---|---|
+| `navHome` | `[data-testid="AppTabBar_Home_Link"]` | `a` |
+| `navExplore` | `[data-testid="AppTabBar_Explore_Link"]` | `a` |
+| `navNotifications` | `[data-testid="AppTabBar_Notifications_Link"]` | `a` |
+| `navMessages` | `[data-testid="AppTabBar_DirectMessage_Link"]` | `a`, `/i/chat` |
+| `navProfile` | `[data-testid="AppTabBar_Profile_Link"]` | `a` |
+| `navMore` | `[data-testid="AppTabBar_More_Menu"]` | `button` |
+| `actionReply` | `article [data-testid="reply"]` | `button` |
+| `actionRetweet` | `article :is([data-testid="retweet"],[data-testid="unretweet"])` | |
+| `actionLike` | `article :is([data-testid="like"],[data-testid="unlike"])` | |
+| `actionBookmark` | `article :is([data-testid="bookmark"],[data-testid="removeBookmark"])` | |
+
+Paylaş düğmesinin `data-testid`'i yok (`aria-label` dile bağlı); eylem
+grubunun (`[role="group"]`) son düğmesi.
+
+### Düğmeler
+
+| Çapa | Seçici | Gece değeri |
+|---|---|---|
+| `followButton` | `[data-testid$="-follow"]` | satır içi `background-color: rgb(239, 243, 244); border-color: rgba(0, 0, 0, 0)`, metin `rgb(15, 20, 25)`, köşe `9999px`, yükseklik 32px |
+| `unfollowButton` | `[data-testid$="-unfollow"]` | (takip edilen durum) |
+| `composeButton` | `[data-testid="SideNav_NewTweet_Button"]` | `a`, satır içi `rgb(239, 243, 244)` zemin, metin `rgb(15, 20, 25)`, yükseklik 52px |
+| `composeSubmit` | `:is([data-testid="tweetButtonInline"],[data-testid="tweetButton"])` | `button`, satır içi `rgb(239, 243, 244)` |
+
+### Avatar
+
+`[data-testid^="UserAvatar-Container-"]` içinde iki katman `border-radius:
+9999px; overflow: hidden` (kap `div > div > div > div` ve
+`div[role=presentation] > div`); `clip-path` yok.
+
+### Modern öğeler
+
+| Çapa | Seçici | Not |
+|---|---|---|
+| `grokNav` | `header[role="banner"] nav a[href="/i/grok"]` | `data-testid` yok |
+| `grokDrawer` | `[data-testid="GrokDrawer"]` | sağ alttaki sohbet çekmecesi |
+| `grokTweetButton` | `article div:has(> div > [data-testid="caret"]) > div > button:not([data-testid])` | tweet başlığındaki "Grok actions"; `aria-label` dile bağlı olduğu için yapısal |
+| `premiumNav` | `[data-testid="premium-signup-tab"]` | |
+| `premiumSidebar` | `[data-testid="sidebarColumn"] aside:has(a[href="/i/premium_sign_up"])` | "Subscribe to Premium" kutusu |
+| `viewCount` | `article [role="group"] a[href$="/analytics"]` | sarmalayan `div` gizlenmeli |
+
+Etkin durum renkleri (kural tablosunda): beğeni `rgb(249, 24, 128)`, retweet
+`rgb(0, 186, 124)`.
