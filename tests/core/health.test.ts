@@ -8,6 +8,7 @@ const map = parsePaletteMap({
   'font-family': {},
   'font-size': {},
   'border-radius': {},
+  xTokens: { light: {}, night: {} },
 });
 
 function memoryStore() {
