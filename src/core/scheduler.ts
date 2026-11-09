@@ -1,5 +1,7 @@
 export interface TickInfo {
   added: Node[];
+  /** Elements whose data-testid changed (X swaps it when state flips, e.g. like → unlike). */
+  changed: Element[];
   routeChanged: boolean;
 }
 
@@ -19,6 +21,7 @@ export interface SchedulerOptions {
 export function createScheduler(opts: SchedulerOptions): { start(): void; stop(): void; poke(): void } {
   const { root, onTick, earlyPollMs = 500, earlyPollDurationMs = 10_000 } = opts;
   let pending: Node[] = [];
+  let changedPending = new Set<Element>();
   let lastHref = location.href;
   let scheduled = false;
   let running = false;
@@ -29,7 +32,8 @@ export function createScheduler(opts: SchedulerOptions): { start(): void; stop()
 
   const observer = new MutationObserver((records) => {
     for (const record of records) {
-      for (const node of record.addedNodes) if (node.nodeType === Node.ELEMENT_NODE) pending.push(node);
+      if (record.type === 'attributes') changedPending.add(record.target as Element);
+      else for (const node of record.addedNodes) if (node.nodeType === Node.ELEMENT_NODE) pending.push(node);
     }
     schedule();
   });
@@ -57,23 +61,25 @@ export function createScheduler(opts: SchedulerOptions): { start(): void; stop()
     running = true;
     const added = pending;
     pending = [];
+    const changed = [...changedPending];
+    changedPending = new Set();
     const href = location.href;
     const routeChanged = href !== lastHref;
     lastHref = href;
     let more = false;
     try {
-      more = await onTick({ added, routeChanged });
+      more = await onTick({ added, changed, routeChanged });
     } finally {
       running = false;
     }
     if (more) scheduleIdle();
-    else if (again || pending.length > 0) schedule();
+    else if (again || pending.length > 0 || changedPending.size > 0) schedule();
     again = false;
   }
 
   return {
     start() {
-      observer.observe(root, { childList: true, subtree: true });
+      observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-testid'] });
       window.addEventListener('popstate', schedule);
       if (earlyPollDurationMs > 0) {
         pollTimer = setInterval(schedule, earlyPollMs);

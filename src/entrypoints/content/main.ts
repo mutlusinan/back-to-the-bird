@@ -16,7 +16,7 @@ import { parsePaletteMap, type PaletteMap, type Theme } from '../../engine/palet
 import type { EngineFeature } from '../../engine/remap';
 import { SheetScanner } from '../../engine/scan';
 import { missingXTokens } from '../../engine/xtokens';
-import { tagAdded } from '../../core/anchors';
+import { retagElement, tagAdded } from '../../core/anchors';
 import { removeFavicon } from '../../features/branding/favicon';
 import { DOM_FEATURES, runFeatures } from '../../features/registry';
 
@@ -160,7 +160,7 @@ export async function main({
   let featuresDirty = true;
   const scheduler = createScheduler({
     root: html,
-    onTick: async ({ added, routeChanged }) => {
+    onTick: async ({ added, changed, routeChanged }) => {
       if (!browser.runtime?.id) {
         handOver();
         return false;
@@ -169,8 +169,9 @@ export async function main({
         // Document-wide pass only when the page or settings changed; otherwise just tag
         // anchors inside the new elements, and re-run features if one of them can now start.
         let rerun = featuresDirty || routeChanged;
-        if (!rerun && added.length > 0) {
+        if (!rerun && (added.length > 0 || changed.length > 0)) {
           const found = tagAdded(table, DOM_ANCHORS, added);
+          for (const el of changed) for (const name of retagElement(table, DOM_ANCHORS, el)) found.add(name);
           const on = enabled();
           rerun = DOM_FEATURES.some((f) => on.has(f.id) && !domActive.has(f.id) && f.requires.some((a) => found.has(a)));
         }

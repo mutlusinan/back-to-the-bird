@@ -1,4 +1,4 @@
-import { tagAdded, tagAnchors } from '../../src/core/anchors';
+import { retagElement, tagAdded, tagAnchors } from '../../src/core/anchors';
 import { ANCHOR_NAMES, type SelectorTable } from '../../src/core/selectors';
 
 const table: SelectorTable = {
@@ -42,4 +42,14 @@ test('tagAdded searches only the added elements and their subtrees', () => {
   expect([...found]).toEqual(['sideNavLogo']);
   expect(document.getElementById('l')!.getAttribute('data-ot')).toBe('sideNavLogo');
   expect(document.getElementById('old')!.hasAttribute('data-ot')).toBe(false);
+});
+
+
+test('retagElement replaces stale names with the ones that match now', () => {
+  const t: SelectorTable = { ...table, sideNavLogo: ['[data-testid$="-follow"]'], sidebarBox: ['[data-testid$="-unfollow"]'] };
+  document.body.innerHTML = '<button data-testid="1-unfollow" data-ot="sideNavLogo primaryColumn" id="b"></button>';
+  const el = document.getElementById('b')!;
+  const found = retagElement(t, ['sideNavLogo', 'sidebarBox'], el);
+  expect([...found]).toEqual(['sidebarBox']);
+  expect(el.getAttribute('data-ot')).toBe('primaryColumn sidebarBox');
 });

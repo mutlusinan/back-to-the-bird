@@ -88,6 +88,18 @@ test('added text nodes still tick but are not passed on', async () => {
   expect(ticks[0]!.added).toEqual([]);
 });
 
+test('a data-testid change is reported as changed', async () => {
+  const el = document.createElement('button');
+  el.setAttribute('data-testid', 'like');
+  document.body.appendChild(el);
+  start();
+  el.setAttribute('data-testid', 'unlike');
+  await vi.advanceTimersByTimeAsync(50);
+  expect(ticks).toHaveLength(1);
+  expect(ticks[0]!.changed).toEqual([el]);
+  expect(ticks[0]!.added).toEqual([]);
+});
+
 test('poke requests a tick without any mutation', async () => {
   start();
   scheduler!.poke();

@@ -125,3 +125,13 @@ test('an era change in the popup applies without reload', async () => {
   await sleep(40);
   expect(html().getAttribute('data-ot-era')).toBe('2014');
 });
+
+test('an element whose data-testid changes is retagged', async () => {
+  running = await main({ doc: document, win: window });
+  await sleep(80);
+  const column = document.querySelector('[data-testid="primaryColumn"]')!;
+  expect(column.getAttribute('data-ot')).toContain('primaryColumn');
+  column.setAttribute('data-testid', 'somethingElse');
+  await sleep(80);
+  expect(column.getAttribute('data-ot') ?? '').not.toContain('primaryColumn');
+});
