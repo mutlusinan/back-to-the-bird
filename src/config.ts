@@ -29,7 +29,7 @@ export const ALL_FEATURES: readonly FeatureId[] = [
   'hideViewCounts',
 ];
 
-export const IMPLEMENTED_FEATURES: readonly FeatureId[] = ['palette', 'font', 'typeScale', 'radius', 'surfaces', 'branding', 'icons', 'avatar'];
+export const IMPLEMENTED_FEATURES: readonly FeatureId[] = ['palette', 'font', 'typeScale', 'radius', 'surfaces', 'branding', 'icons', 'avatar', 'followButton'];
 
 export type Era = '2014' | '2017';
 

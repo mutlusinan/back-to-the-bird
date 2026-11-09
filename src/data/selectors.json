@@ -51,5 +51,17 @@
   ],
   "avatar": [
     "[data-testid^=\"UserAvatar-Container-\"]"
+  ],
+  "followButton": [
+    "[data-testid$=\"-follow\"]"
+  ],
+  "unfollowButton": [
+    "[data-testid$=\"-unfollow\"]"
+  ],
+  "composeButton": [
+    "[data-testid=\"SideNav_NewTweet_Button\"]"
+  ],
+  "composeSubmit": [
+    ":is([data-testid=\"tweetButtonInline\"],[data-testid=\"tweetButton\"])"
   ]
 }

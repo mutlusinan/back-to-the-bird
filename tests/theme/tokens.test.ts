@@ -46,3 +46,17 @@ test('2014 night takes 2017 night colors and 2014 shapes', () => {
   expect(css).toContain('--ot-radius-pill:4px');
   expect(css).toContain('--ot-avatar-radius:5px');
 });
+
+test.each(cases)('every token the feature CSS uses is defined for %s %s', (era, theme) => {
+  const dirs = ['surfaces', 'branding', 'radius', 'icons', 'avatar', 'buttons', 'hide'];
+  const featureCss = dirs.map((d) => {
+    try {
+      return readFileSync(`src/features/${d}/style.css`, 'utf8');
+    } catch {
+      return '';
+    }
+  });
+  const used = new Set([...[...featureCss, tokensCss].join('\n').matchAll(/var\(--ot-([a-z0-9-]+)\)/g)].map((m) => m[1]!));
+  const css = block(era, theme);
+  expect([...used].filter((t) => !css.includes(`--ot-${t}:`))).toEqual([]);
+});

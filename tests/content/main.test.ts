@@ -135,3 +135,14 @@ test('an element whose data-testid changes is retagged', async () => {
   await sleep(80);
   expect(column.getAttribute('data-ot') ?? '').not.toContain('primaryColumn');
 });
+
+test('a follow button that becomes "following" switches anchors', async () => {
+  document.body.insertAdjacentHTML('beforeend', '<button data-testid="1-follow" id="fb"></button>');
+  running = await main({ doc: document, win: window });
+  await sleep(80);
+  const button = document.getElementById('fb')!;
+  expect(button.getAttribute('data-ot')).toBe('followButton');
+  button.setAttribute('data-testid', '1-unfollow');
+  await sleep(80);
+  expect(button.getAttribute('data-ot')).toBe('unfollowButton');
+});

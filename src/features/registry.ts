@@ -2,12 +2,13 @@ import type { FeatureId } from '../config';
 import { tagAnchors } from '../core/anchors';
 import { branding } from './branding';
 import { icons } from './icons';
+import { buttons } from './buttons';
 import { avatar } from './avatar';
 import { radius } from './radius';
 import { surfaces } from './surfaces';
 import type { Feature, FeatureContext } from './types';
 
-export const DOM_FEATURES: readonly Feature[] = [surfaces, branding, radius, icons, avatar];
+export const DOM_FEATURES: readonly Feature[] = [surfaces, branding, radius, icons, avatar, buttons];
 
 /** Features that threw during this page session stay off until reload. */
 const failed = new Set<FeatureId>();

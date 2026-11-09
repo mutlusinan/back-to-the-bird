@@ -114,3 +114,5 @@ mantığını kullanır (çıkarım).
 - Mayıs 2016: `…/web/20160529205426id_/https://abs.twimg.com/a/1464326506/css/t1/twitter_core.bundle.css`
 - Mayıs 2017 (sınır): `…/web/20170503000000id_/https://abs.twimg.com/a/1493832501/css/t1/twitter_core.bundle.css`
 - 2018 bileşenleri: `…/web/20180823204119id_/https://abs.twimg.com/a/1527289941/css/t1/twitter_core.bundle.css`
+
+Not: 2014 Tweet düğmesi hover rengi `#006A90`, paketteki `#0084B4` üstüne %15 siyah degradenin düz renge çevrilmiş halidir (çıkarım).

@@ -15,7 +15,11 @@ export type AnchorName =
   | 'actionLike'
   | 'actionLiked'
   | 'actionBookmark'
-  | 'avatar';
+  | 'avatar'
+  | 'followButton'
+  | 'unfollowButton'
+  | 'composeButton'
+  | 'composeSubmit';
 
 /** Anchor name → selectors in priority order. */
 export type SelectorTable = Record<AnchorName, string[]>;
@@ -38,6 +42,10 @@ export const ANCHOR_NAMES: readonly AnchorName[] = [
   'actionLiked',
   'actionBookmark',
   'avatar',
+  'followButton',
+  'unfollowButton',
+  'composeButton',
+  'composeSubmit',
 ];
 
 /** Validates an untrusted selector table; every selector must parse. */
