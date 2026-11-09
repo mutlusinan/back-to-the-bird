@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "dataVersion": "2026-11-09.1",
+  "dataVersion": "2026-11-09.2",
   "minExtensionVersion": "1.0.0",
   "maxExtensionVersion": null,
   "selectors": {
@@ -206,19 +206,245 @@
     }
   },
   "wording": {
+    "ar": {
+      "composeButton": "تغريد",
+      "composeSubmit": "تغريد",
+      "repostAction": {
+        "2014": "إعادة تغريد",
+        "2017": "إعادة التغريد"
+      },
+      "undoRepostAction": {
+        "2014": "إلغاء إعادة التغريد",
+        "2017": "التراجع عن التغريدة"
+      },
+      "quoteAction": {
+        "2014": null,
+        "2017": "إعادة التغريد بتعليق"
+      },
+      "repostsLabel": "إعادات تغريد",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "المفضّلات",
+        "2017": "الإعجابات"
+      },
+      "profilePostsTab": {
+        "2014": "تغريدات",
+        "2017": "التغريدات"
+      }
+    },
+    "de": {
+      "composeButton": "Twittern",
+      "composeSubmit": "Twittern",
+      "repostAction": "Retweeten",
+      "undoRepostAction": "Retweet rückgängig machen",
+      "quoteAction": {
+        "2014": null,
+        "2017": "Mit Kommentar retweeten"
+      },
+      "repostsLabel": "Retweets",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "Favoriten",
+        "2017": "Gefällt mir"
+      },
+      "profilePostsTab": "Tweets"
+    },
     "en": {
       "composeButton": "Tweet",
       "composeSubmit": "Tweet",
       "repostAction": "Retweet",
-      "undoRepostAction": "Undo Retweet",
-      "quoteAction": null,
+      "undoRepostAction": {
+        "2014": "Undo retweet",
+        "2017": "Undo Retweet"
+      },
+      "quoteAction": {
+        "2014": "Quote Tweet",
+        "2017": "Retweet with comment"
+      },
       "repostsLabel": "Retweets",
       "quotesLabel": null,
       "likesLabel": {
         "2014": "Favorites",
-        "2017": null
+        "2017": "Likes"
       },
       "profilePostsTab": "Tweets"
+    },
+    "es": {
+      "composeButton": "Twittear",
+      "composeSubmit": "Twittear",
+      "repostAction": "Retwittear",
+      "undoRepostAction": "Deshacer Retweet",
+      "quoteAction": {
+        "2014": "Citar Tweet",
+        "2017": "Retwittear con comentario"
+      },
+      "repostsLabel": "Retweets",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "Favoritos",
+        "2017": "Me gusta"
+      },
+      "profilePostsTab": "Tweets"
+    },
+    "fr": {
+      "composeButton": "Tweeter",
+      "composeSubmit": "Tweeter",
+      "repostAction": "Retweeter",
+      "undoRepostAction": {
+        "2014": "Annuler le retweet",
+        "2017": "Annuler le Retweet"
+      },
+      "quoteAction": {
+        "2014": null,
+        "2017": "Retweeter avec un commentaire"
+      },
+      "repostsLabel": "Retweets",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "Favoris",
+        "2017": "J'aime"
+      },
+      "profilePostsTab": "Tweets"
+    },
+    "id": {
+      "composeButton": "Tweet",
+      "composeSubmit": "Tweet",
+      "repostAction": "Retweet",
+      "undoRepostAction": "Batalkan retweet",
+      "quoteAction": {
+        "2014": "Kutip Tweet",
+        "2017": "Retweet dengan komentar"
+      },
+      "repostsLabel": "Retweet",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "Favorit",
+        "2017": "Suka"
+      },
+      "profilePostsTab": "Tweet"
+    },
+    "it": {
+      "composeButton": {
+        "2014": "Tweet",
+        "2017": "Twitta"
+      },
+      "composeSubmit": "Tweet",
+      "repostAction": "Retweet",
+      "undoRepostAction": "Annulla Retweet",
+      "quoteAction": {
+        "2014": "Cita Tweet",
+        "2017": "Ritwitta e commenta"
+      },
+      "repostsLabel": "Retweet",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "Preferiti",
+        "2017": "Mi piace"
+      },
+      "profilePostsTab": "Tweet"
+    },
+    "ja": {
+      "composeButton": "ツイート",
+      "composeSubmit": "ツイート",
+      "repostAction": "リツイート",
+      "undoRepostAction": "リツイートを取り消す",
+      "quoteAction": {
+        "2014": "引用ツイート",
+        "2017": "コメントを付けてリツイート"
+      },
+      "repostsLabel": "リツイート",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "お気に入り",
+        "2017": "いいね"
+      },
+      "profilePostsTab": "ツイート"
+    },
+    "ko": {
+      "composeButton": {
+        "2014": "트윗하기",
+        "2017": "트윗"
+      },
+      "composeSubmit": "트윗하기",
+      "repostAction": "리트윗",
+      "undoRepostAction": "리트윗 취소",
+      "quoteAction": {
+        "2014": "트윗 인용하기",
+        "2017": "의견을 덧붙여서 리트윗하기"
+      },
+      "repostsLabel": "리트윗",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "관심글",
+        "2017": "마음에 들어요"
+      },
+      "profilePostsTab": "트윗"
+    },
+    "pt": {
+      "composeButton": {
+        "2014": "Tweetar",
+        "2017": "Tweet"
+      },
+      "composeSubmit": {
+        "2014": "Tweetar",
+        "2017": "Tweet"
+      },
+      "repostAction": "Retweetar",
+      "undoRepostAction": {
+        "2014": "Desfazer retweet",
+        "2017": "Desfazer Retweet"
+      },
+      "quoteAction": {
+        "2014": "Comentar Tweet",
+        "2017": "Retweetar com comentário"
+      },
+      "repostsLabel": "Retweets",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "Curtiu",
+        "2017": "Curtidas"
+      },
+      "profilePostsTab": "Tweets"
+    },
+    "ru": {
+      "composeButton": "Твитнуть",
+      "composeSubmit": "Твитнуть",
+      "repostAction": "Ретвитнуть",
+      "undoRepostAction": "Отменить ретвит",
+      "quoteAction": {
+        "2014": "Цитировать",
+        "2017": "Ретвитнуть с комментарием"
+      },
+      "repostsLabel": null,
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "Избранное",
+        "2017": "Нравится"
+      },
+      "profilePostsTab": "Твиты"
+    },
+    "tr": {
+      "composeButton": "Tweetle",
+      "composeSubmit": "Tweetle",
+      "repostAction": {
+        "2014": "Retweetle",
+        "2017": "Retweet"
+      },
+      "undoRepostAction": {
+        "2014": "Retweeti geri al",
+        "2017": "Retweeti Geri Al"
+      },
+      "quoteAction": {
+        "2014": null,
+        "2017": "Yorumla birlikte Retweetle"
+      },
+      "repostsLabel": "Retweet",
+      "quotesLabel": null,
+      "likesLabel": {
+        "2014": "Favoriler",
+        "2017": "Beğeni"
+      },
+      "profilePostsTab": "Tweetler"
     }
   },
   "disabledFeatures": []
