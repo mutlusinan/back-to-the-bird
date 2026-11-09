@@ -34,6 +34,7 @@ const engine = createEngine({
   cache: { get: async () => undefined, set: async () => {} },
   now: () => performance.now(),
   budgetMs: 1_000,
+  features: new Set(['palette', 'font', 'typeScale', 'radius'] as const),
 });
 
 export async function run(staticCss: string) {

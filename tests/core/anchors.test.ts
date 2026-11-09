@@ -1,7 +1,8 @@
 import { tagAdded, tagAnchors } from '../../src/core/anchors';
-import type { SelectorTable } from '../../src/core/selectors';
+import { ANCHOR_NAMES, type SelectorTable } from '../../src/core/selectors';
 
 const table: SelectorTable = {
+  ...(Object.fromEntries(ANCHOR_NAMES.map((n) => [n, [`[data-anchor="${n}"]`]])) as SelectorTable),
   sideNavLogo: ['[data-testid="logo"]'],
   primaryColumn: ['[data-testid="primaryColumn"]'],
   sidebarColumn: ['[data-testid="sidebarColumn"]'],

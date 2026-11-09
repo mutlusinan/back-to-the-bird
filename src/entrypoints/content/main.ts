@@ -13,6 +13,7 @@ import paletteMapJson from '../../data/palette-map.json';
 import selectorsJson from '../../data/selectors.json';
 import { createEngine } from '../../engine';
 import { parsePaletteMap, type PaletteMap, type Theme } from '../../engine/palette-map';
+import type { EngineFeature } from '../../engine/remap';
 import { SheetScanner } from '../../engine/scan';
 import { missingXTokens } from '../../engine/xtokens';
 import { tagAdded } from '../../core/anchors';
@@ -128,6 +129,7 @@ export async function main({
     },
     now: () => performance.now(),
     budgetMs: ENGINE_BUDGET_MS,
+    features: new Set(IMPLEMENTED_FEATURES.filter((id) => ENGINE_FEATURES.includes(id)) as EngineFeature[]),
   });
   await engine.start().catch((err) => health.error('core', err));
 

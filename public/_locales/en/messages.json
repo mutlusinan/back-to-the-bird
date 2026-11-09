@@ -64,5 +64,11 @@
   },
   "era2017": {
     "message": "2017–2019"
+  },
+  "featureTypeScale": {
+    "message": "Text size"
+  },
+  "featureRadius": {
+    "message": "Corners"
   }
 }

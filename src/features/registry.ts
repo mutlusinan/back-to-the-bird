@@ -1,10 +1,11 @@
 import type { FeatureId } from '../config';
 import { tagAnchors } from '../core/anchors';
 import { branding } from './branding';
+import { radius } from './radius';
 import { surfaces } from './surfaces';
 import type { Feature, FeatureContext } from './types';
 
-export const DOM_FEATURES: readonly Feature[] = [surfaces, branding];
+export const DOM_FEATURES: readonly Feature[] = [surfaces, branding, radius];
 
 /** Features that threw during this page session stay off until reload. */
 const failed = new Set<FeatureId>();

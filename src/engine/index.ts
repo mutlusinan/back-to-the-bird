@@ -1,6 +1,6 @@
 import { renderInlineOverrides } from './inline';
 import type { PaletteMap } from './palette-map';
-import { remapRule, renderOverrides, type RemapEntry, type RuleLike } from './remap';
+import { remapRule, renderOverrides, type EngineFeature, type RemapEntry, type RuleLike } from './remap';
 import type { ScanResult } from './scan';
 import { renderXTokenOverrides } from './xtokens';
 
@@ -11,6 +11,8 @@ export interface EngineDeps {
   cache: { get(key: string): Promise<string | undefined>; set(key: string, v: string): Promise<void> };
   now: () => number;
   budgetMs: number;
+  /** Engine features that are implemented; entries of other features are not generated. */
+  features: ReadonlySet<EngineFeature>;
 }
 
 export interface Engine {
@@ -59,6 +61,7 @@ export function createEngine(deps: EngineDeps): Engine {
       let processed = 0;
       while (queue.length > 0) {
         for (const entry of remapRule(queue.shift()!, deps.map)) {
+          if (!deps.features.has(entry.feature)) continue;
           entries.set(`${entry.feature}|${entry.theme}|${entry.media ?? ''}|${entry.selector}|${entry.property}`, entry);
           matched.add(entry.key);
         }

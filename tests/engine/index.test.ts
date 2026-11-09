@@ -35,6 +35,7 @@ function setup(batches: RuleLike[][], over: Partial<EngineDeps> = {}) {
     cache: { get: async (k) => store.get(k), set: async (k, v) => void store.set(k, v) },
     now: () => clock,
     budgetMs: 4,
+    features: new Set(['palette', 'font', 'typeScale', 'radius'] as const),
     ...over,
   };
   return { engine: createEngine(deps), applied, store, tickClock: (ms: number) => (clock += ms) };
@@ -96,4 +97,26 @@ test('work beyond the budget continues on later ticks', async () => {
 test('a failing applyCss is reported to the caller', async () => {
   const { engine } = setup([[rule('.r-a')]], { applyCss: async () => Promise.reject(new Error('gone')) });
   await expect(engine.tick()).rejects.toThrow('gone');
+});
+
+
+const mixed = (): RuleLike => ({
+  selectorText: '.r-mix',
+  style: { getPropertyValue: (p) => ({ color: 'rgb(29, 155, 240)', 'font-size': '15px', 'border-top-left-radius': '9999px' })[p] ?? '' },
+});
+const sizeMap = parsePaletteMap({ ...map, 'font-size': { '15px': 'fs-body' }, 'border-radius': { '9999px': 'radius-pill' } });
+
+test('switched-off engine features produce no rules', async () => {
+  const { engine, applied } = setup([[mixed()]], { map: sizeMap, features: new Set(['palette'] as const) });
+  await engine.tick();
+  expect(applied[0]).toContain('.r-mix{color:var(--ot-accent)}');
+  expect(applied[0]).not.toContain('data-ot-f-typeScale');
+  expect(applied[0]).not.toContain('data-ot-f-radius');
+});
+
+test('switched-on engine features produce their rules', async () => {
+  const { engine, applied } = setup([[mixed()]], { map: sizeMap });
+  await engine.tick();
+  expect(applied[0]).toContain('html[data-ot-f-typeScale] .r-mix{font-size:var(--ot-fs-body)}');
+  expect(applied[0]).toContain('html[data-ot-f-radius] .r-mix{border-top-left-radius:var(--ot-radius-pill)}');
 });

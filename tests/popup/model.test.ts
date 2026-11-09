@@ -11,6 +11,8 @@ test('toggle rows list the implemented features in order', () => {
   expect(toggleRows(DEFAULT_SETTINGS)).toEqual([
     { id: 'palette', labelKey: 'featurePalette', checked: true },
     { id: 'font', labelKey: 'featureFont', checked: true },
+    { id: 'typeScale', labelKey: 'featureTypeScale', checked: true },
+    { id: 'radius', labelKey: 'featureRadius', checked: true },
     { id: 'surfaces', labelKey: 'featureSurfaces', checked: true },
     { id: 'branding', labelKey: 'featureBranding', checked: true },
   ]);

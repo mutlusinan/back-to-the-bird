@@ -1,7 +1,9 @@
-import { findAll, parseSelectorTable, type SelectorTable } from '../../src/core/selectors';
+import { ANCHOR_NAMES, findAll, parseSelectorTable, type SelectorTable } from '../../src/core/selectors';
 import selectorsJson from '../../src/data/selectors.json';
 
+// Every anchor gets a harmless default; the ones under test are spelled out.
 const table = (): SelectorTable => ({
+  ...(Object.fromEntries(ANCHOR_NAMES.map((n) => [n, [`[data-anchor="${n}"]`]])) as SelectorTable),
   sideNavLogo: ['[data-testid="logo"]', 'header h1 a'],
   primaryColumn: ['[data-testid="primaryColumn"]'],
   sidebarColumn: ['[data-testid="sidebarColumn"]'],
