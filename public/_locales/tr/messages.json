@@ -88,5 +88,8 @@
   },
   "featureHideViewCounts": {
     "message": "Görüntülenme sayılarını gizle"
+  },
+  "takeSnapshot": {
+    "message": "Örnek al (geliştirme)"
   }
 }

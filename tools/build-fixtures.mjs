@@ -22,13 +22,13 @@ const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" class="r-icon"><g><pat
 const icon = (size) => `<div class="r-flex"><div class="r-flex">${ICON.replace('r-icon', `r-icon r-icon-${size}`)}</div></div>`;
 
 const navLink = (testid, label) =>
-  `<a href="/${label.toLowerCase()}" data-testid="${testid}" aria-label="${label}" role="link" class="r-nav">${icon('nav')}<span class="r-text">${label}</span></a>`;
+  `<a href="/${label.toLowerCase()}" data-testid="${testid}" aria-label="${label}" role="link" class="r-nav r-text">${icon('nav')}<span class="r-text">${label}</span></a>`;
 
 const avatar = () =>
   `<div data-testid="UserAvatar-Container-user" class="r-avatar"><div><div><div class="r-pill r-clip"><div role="presentation"><div class="r-pill r-clip r-avatar-img"></div></div></div></div></div></div>`;
 
 const action = (testid, extra = '') =>
-  `<div class="r-action"><button data-testid="${testid}" role="button" class="r-action-btn">${icon('action')}<span data-testid="app-text-transition-container" class="r-text2">12</span></button>${extra}</div>`;
+  `<div class="r-action"><button data-testid="${testid}" role="button" class="r-action-btn ${testid === 'unlike' ? 'r-like' : 'r-text2'}">${icon('action')}<span data-testid="app-text-transition-container" class="r-text2">12</span></button>${extra}</div>`;
 
 const tweet = (liked) => `
 <article data-testid="tweet" role="article" class="r-tweet r-border">
@@ -67,7 +67,7 @@ main[role=main]{display:flex;gap:24px}[data-testid=primaryColumn]{width:600px;bo
 .r-action-btn,.r-icon-btn{display:flex;align-items:center;gap:4px;background:none;border:0;padding:0}
 .r-btn{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:0 16px;border:1px solid;font-weight:bold}
 .r-compose{min-height:52px;width:230px;margin:12px}.r-box{margin:16px 0;padding:12px 16px;border:1px solid}
-.r-bold{font-weight:bold}.r-clip{overflow:hidden}
+a{text-decoration:none}.r-bold{font-weight:bold}.r-clip{overflow:hidden}
 [data-testid=SearchBox_Search_Input_label]{display:flex;padding:10px 16px;border:1px solid}
 [data-testid=GrokDrawer]{position:fixed;bottom:0;inset-inline-end:16px;padding:12px}
 </style>
@@ -92,7 +92,7 @@ main[role=main]{display:flex;gap:24px}[data-testid=primaryColumn]{width:600px;bo
       <a href="/i/grok" aria-label="Grok" role="link" class="r-nav">${icon('nav')}<span class="r-text">Grok</span></a>
       <a href="/i/premium_sign_up" data-testid="premium-signup-tab" aria-label="Premium" role="link" class="r-nav">${icon('nav')}<span class="r-text">Premium</span></a>
       ${navLink('AppTabBar_Profile_Link', 'Profile')}
-      <button data-testid="AppTabBar_More_Menu" aria-label="More" class="r-nav r-action-btn">${icon('nav')}<span class="r-text">More</span></button>
+      <button data-testid="AppTabBar_More_Menu" aria-label="More" class="r-nav r-action-btn r-text">${icon('nav')}<span class="r-text">More</span></button>
     </nav>
     <a href="/compose/post" data-testid="SideNav_NewTweet_Button" role="link" class="r-btn r-compose" style="${t.button}"><span style="color: rgb(${t.buttonText});">Post</span></a>
   </header>

@@ -88,5 +88,8 @@
   },
   "featureHideViewCounts": {
     "message": "Hide view counts"
+  },
+  "takeSnapshot": {
+    "message": "Take snapshot (dev)"
   }
 }

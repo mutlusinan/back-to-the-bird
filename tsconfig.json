@@ -4,7 +4,17 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
-    "types": ["vitest/globals"]
+    "types": [
+      "vitest/globals"
+    ]
   },
-  "include": [".wxt/wxt.d.ts", "src", "tests", "wxt.config.ts", "vitest.config.ts"]
+  "include": [
+    ".wxt/wxt.d.ts",
+    "src",
+    "tests",
+    "wxt.config.ts",
+    "vitest.config.ts",
+    "playwright.config.ts",
+    "tools/preview"
+  ]
 }

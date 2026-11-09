@@ -7,7 +7,7 @@ export type ToBackground =
   | { type: 'ot:badge'; level: 'ok' | 'warn' | 'error' };
 
 /** Popup → content script (top frame only). */
-export type ToContent = { type: 'ot:getHealth' };
+export type ToContent = { type: 'ot:getHealth' } | { type: 'ot:snapshot' };
 
 export interface HealthResponse {
   snapshot: HealthSnapshot;

@@ -99,6 +99,22 @@ function bindShowOriginal(tab: Browser.tabs.Tab | undefined): void {
   button.addEventListener('keyup', (e) => (e.key === ' ' || e.key === 'Enter') && release());
 }
 
+/** Development builds only: saves a personal-data-free copy of the X page as a test fixture. */
+function bindSnapshot(tab: Browser.tabs.Tab | undefined): void {
+  const button = byId<HTMLButtonElement>('takeSnapshot');
+  button.hidden = false;
+  button.textContent = t('takeSnapshot');
+  button.addEventListener('click', async () => {
+    if (!tab?.id) return;
+    const html = (await browser.tabs.sendMessage(tab.id, { type: 'ot:snapshot' }, { frameId: 0 })) as string;
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    link.download = 'x-snapshot.real.html';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  });
+}
+
 async function init(): Promise<void> {
   byId('title').textContent = t('extName');
   byId('eraTitle').textContent = t('eraTitle');
@@ -114,6 +130,8 @@ async function init(): Promise<void> {
   await renderToggles();
   renderHealth(response);
   bindShowOriginal(tab);
+
+  if (import.meta.env.DEV) bindSnapshot(tab);
 
   byId('copyReport').addEventListener('click', async () => {
     const status = byId('copyStatus');

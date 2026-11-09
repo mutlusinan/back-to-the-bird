@@ -5,6 +5,7 @@ import { createHealth, type Health, type HealthStore } from '../../core/health';
 import { createInjector } from '../../core/inject';
 import { SHOW_ORIGINAL_PORT, type HealthResponse, type ToBackground } from '../../core/messages';
 import { classifyRoute } from '../../core/route';
+import { takeSnapshot } from '../../core/snapshot';
 import { createScheduler } from '../../core/scheduler';
 import { parseSelectorTable, type SelectorTable } from '../../core/selectors';
 import { loadSettings, watchSettings, type Settings } from '../../core/settings';
@@ -225,10 +226,11 @@ export async function main({
     cleanups.push(() => clearTimeout(timer));
 
     // sendResponse rather than a returned Promise: Chrome does not honour promise returns here.
-    const onMessage = (m: unknown, _sender: unknown, sendResponse: (r: HealthResponse) => void) => {
-      if ((m as { type?: string } | null)?.type === 'ot:getHealth') {
-        sendResponse(healthResponse(health, map, settings, theme, doc));
-      }
+    const onMessage = (m: unknown, _sender: unknown, sendResponse: (r: HealthResponse | string) => void) => {
+      const type = (m as { type?: string } | null)?.type;
+      if (type === 'ot:getHealth') sendResponse(healthResponse(health, map, settings, theme, doc));
+      // Development builds only: fixture capture for tests (personal data removed).
+      else if (type === 'ot:snapshot' && import.meta.env.DEV) sendResponse(takeSnapshot(doc));
       return undefined;
     };
     const onConnect = (port: PortLike) => {
