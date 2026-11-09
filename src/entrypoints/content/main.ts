@@ -52,6 +52,7 @@ export function attachShowOriginalPort(port: PortLike, set: (hold: boolean) => v
  */
 export async function main({ doc, win }: { doc: Document; win: Window }): Promise<ContentController> {
   const isTop = win.top === win;
+  const frameKind = isTop ? 'top' : 'sub';
   const html = doc.documentElement;
   const health = createHealth(localStore);
   const cleanups: (() => void)[] = [];
@@ -105,12 +106,14 @@ export async function main({ doc, win }: { doc: Document; win: Window }): Promis
     map,
     scan: () => scanner.scanNew(),
     applyCss: createInjector(doc, send, handOver),
+    // Frames see different rule sets (X's chat iframe vs the page); one shared key would let
+    // the iframe's CSS be the page's startup CSS after visiting Messages.
     cache: {
       get: async (k) => {
-        const v = await localStore.get(k).catch(() => undefined);
+        const v = await localStore.get(`${k}:${frameKind}`).catch(() => undefined);
         return typeof v === 'string' ? v : undefined;
       },
-      set: (k, v) => localStore.set(k, v).catch(() => {}),
+      set: (k, v) => localStore.set(`${k}:${frameKind}`, v).catch(() => {}),
     },
     now: () => performance.now(),
     budgetMs: ENGINE_BUDGET_MS,

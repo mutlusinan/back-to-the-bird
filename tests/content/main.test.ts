@@ -63,6 +63,16 @@ test('a theme switch on X flips the theme attribute', async () => {
   expect(html().getAttribute('data-ot-theme')).toBe('night');
 });
 
+test('top frame and subframes cache their css under separate keys', async () => {
+  running = await main({ doc: document, win: window });
+  await sleep(80);
+  running.stop();
+  running = await main({ doc: document, win: { top: {} } as unknown as Window });
+  await sleep(80);
+  const keys = Object.keys(await fakeBrowser.storage.local.get(null)).filter((k) => k.startsWith('ot:engineCss'));
+  expect(keys.sort()).toEqual(['ot:engineCss:v1:sub', 'ot:engineCss:v1:top']);
+});
+
 test('a dead extension context leaves the page in X state', async () => {
   vi.spyOn(fakeBrowser.runtime, 'sendMessage').mockImplementation((async () => {
     throw new Error('Extension context invalidated.');
