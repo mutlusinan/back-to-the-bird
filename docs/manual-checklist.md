@@ -32,6 +32,12 @@ Her yayından önce Chrome ve Firefox'ta, X'e giriş yapılmış bir profille.
 - [ ] Eklentiyi yeniden yükle; açık x.com sekmesi bozulmaz.
 - [ ] Mesajlar (sohbet PIN'i olan bir hesapla): sohbet iframe'i de dönem
       renklerinde.
+- [ ] Bir tweeti beğen ve beğeniyi geri al: ikon dolu kalp/yıldıza geçip geri
+      döner, renk dönemin beğeni rengi; aynısı birini takip edip bırakınca
+      Takip et / Takip ediliyor düğmesi için.
+- [ ] 2014 döneminde Ayarlar > Ekran: tema ve renk seçimindeki yuvarlak
+      radyo düğmeleri ve renk daireleri kareleşiyor mu? Kareleşiyorsa
+      `selectors.json` `radiusKeep`'e eklenmeli.
 
 ## M1 canlı kontrol sonuçları (2026-11-09)
 
@@ -101,7 +107,10 @@ Düzeltilenler: `selectors.json` `premiumSidebar` (profil kartı), `tokens.css`
 2014 gece `accent-hover-bg` (`#55ACEE` yerine o takımın vurgusu `#1DA1F2`'nin
 %10'u).
 
-Ölçülmeyenler: hover renklerinin ekranda değişimi (kurallar eşleşti, fare ile
+Ölçülmeyenler: gerçek beğeni/geri alma geçişi (X'in `like`↔`unlike`
+değişimi ve dolu ikona geçiş yalnız birim testlerinde; canlıda yalnız renk
+eşlemesi ölçüldü), 2014'te Ayarlar sayfalarındaki yuvarlak denetimler,
+hover renklerinin ekranda değişimi (kurallar eşleşti, fare ile
 denenmedi), "Following"/Unfollow düğmesi (hesapta görünür bir örnek yoktu;
 birim ve görsel testlerle kapsandı), sohbet iframe'i, Firefox, gerçek eklenti
 yolu (`scripting.insertCSS`, popup, rozet). İkinci tur (profil, tweet,

@@ -146,3 +146,16 @@ test('a follow button that becomes "following" switches anchors', async () => {
   await sleep(80);
   expect(button.getAttribute('data-ot')).toBe('unfollowButton');
 });
+
+test('a follow flip in the same frame as a page change still drops the old anchor', async () => {
+  document.body.insertAdjacentHTML('beforeend', '<button data-testid="1-follow" id="fb"></button>');
+  running = await main({ doc: document, win: window });
+  await sleep(80);
+  const button = document.getElementById('fb')!;
+  const start = location.href;
+  history.pushState({}, '', '/someone');
+  button.setAttribute('data-testid', '1-unfollow');
+  await sleep(80);
+  history.pushState({}, '', start);
+  expect(button.getAttribute('data-ot')).toBe('unfollowButton');
+});

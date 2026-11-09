@@ -7,7 +7,7 @@ import { SHOW_ORIGINAL_PORT, type HealthResponse, type ToBackground } from '../.
 import { classifyRoute } from '../../core/route';
 import { takeSnapshot } from '../../core/snapshot';
 import { createScheduler } from '../../core/scheduler';
-import { parseSelectorTable, type SelectorTable } from '../../core/selectors';
+import { parseSelectorTable, type AnchorName, type SelectorTable } from '../../core/selectors';
 import { loadSettings, watchSettings, type Settings } from '../../core/settings';
 import { detectTheme, watchTheme } from '../../core/theme';
 import paletteMapJson from '../../data/palette-map.json';
@@ -169,10 +169,13 @@ export async function main({
       if (isTop) {
         // Document-wide pass only when the page or settings changed; otherwise just tag
         // anchors inside the new elements, and re-run features if one of them can now start.
+        // Retag state flips (like→unlike, follow→unfollow) first: a full pass only adds anchors,
+        // so skipping this when one is due would leave the old anchor on the element.
+        const found = new Set<AnchorName>();
+        for (const el of changed) for (const name of retagElement(table, DOM_ANCHORS, el)) found.add(name);
         let rerun = featuresDirty || routeChanged;
-        if (!rerun && (added.length > 0 || changed.length > 0)) {
-          const found = tagAdded(table, DOM_ANCHORS, added);
-          for (const el of changed) for (const name of retagElement(table, DOM_ANCHORS, el)) found.add(name);
+        if (!rerun && (added.length > 0 || found.size > 0)) {
+          for (const name of tagAdded(table, DOM_ANCHORS, added)) found.add(name);
           const on = enabled();
           rerun = DOM_FEATURES.some((f) => on.has(f.id) && !domActive.has(f.id) && f.requires.some((a) => found.has(a)));
         }
