@@ -87,26 +87,30 @@ export function parseSelectorTable(json: unknown): SelectorTable {
   for (const key of Object.keys(record)) {
     if (!ANCHOR_NAMES.includes(key as AnchorName)) throw new Error(`unknown anchor: ${key}`);
   }
-  const probe = document.createDocumentFragment();
   const table = {} as SelectorTable;
-  for (const name of ANCHOR_NAMES) {
-    const list = record[name];
-    if (!Array.isArray(list) || list.length === 0) throw new Error(`anchor ${name} needs selectors`);
-    for (const selector of list) {
-      if (typeof selector !== 'string') throw new Error(`anchor ${name}: selector must be a string`);
-    }
-    // A selector this browser cannot parse (newer syntax, or a typo in remote data) is dropped on
-    // its own: the anchor falls back to its other selectors and every other anchor keeps working.
-    table[name] = (list as string[]).filter((selector) => {
-      try {
-        probe.querySelector(selector);
-        return true;
-      } catch {
-        return false;
-      }
-    });
-  }
+  for (const name of ANCHOR_NAMES) table[name] = usableSelectors(name, record[name]);
   return table;
+}
+
+/**
+ * One anchor's selector list: a non-empty array of strings, else it throws. A selector this
+ * browser cannot parse (newer syntax, or a typo in remote data) is dropped on its own: the
+ * anchor falls back to its other selectors and every other anchor keeps working.
+ */
+export function usableSelectors(name: string, list: unknown): string[] {
+  if (!Array.isArray(list) || list.length === 0) throw new Error(`anchor ${name} needs selectors`);
+  for (const selector of list) {
+    if (typeof selector !== 'string') throw new Error(`anchor ${name}: selector must be a string`);
+  }
+  const probe = document.createDocumentFragment();
+  return (list as string[]).filter((selector) => {
+    try {
+      probe.querySelector(selector);
+      return true;
+    } catch {
+      return false;
+    }
+  });
 }
 
 /**
