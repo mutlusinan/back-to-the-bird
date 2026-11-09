@@ -12,7 +12,8 @@
       "rgb(29, 155, 240)": "accent"
     },
     "border-color": {
-      "rgb(239, 243, 244)": "border"
+      "rgb(239, 243, 244)": "border",
+      "rgb(207, 217, 222)": "border"
     }
   },
   "night": {
@@ -27,7 +28,8 @@
       "rgb(29, 155, 240)": "accent"
     },
     "border-color": {
-      "rgb(47, 51, 54)": "border"
+      "rgb(47, 51, 54)": "border",
+      "rgb(83, 100, 113)": "border"
     }
   },
   "font-family": {
@@ -39,5 +41,39 @@
   "border-radius": {
     "9999px": "radius-pill",
     "16px": "radius-media"
+  },
+  "xTokens": {
+    "light": {
+      "--x-bg-primary": "bg-card",
+      "--x-bg-modal": "bg-card",
+      "--x-bg-sheets": "bg-card",
+      "--x-bg-secondary": "bg-hover",
+      "--x-hover-subtle": "bg-hover",
+      "--x-fg-primary": "text",
+      "--x-fg-secondary": "text-2",
+      "--x-fg-brand": "accent",
+      "--x-btn-brand": "accent",
+      "--x-btn-brand-hover": "accent-hover",
+      "--x-btn-brand-pressed": "accent-hover",
+      "--x-border-divider": "border",
+      "--x-border-normal": "border",
+      "--x-font-sans": "font"
+    },
+    "night": {
+      "--x-bg-primary": "bg-card",
+      "--x-bg-modal": "bg-card",
+      "--x-bg-sheets": "bg-card",
+      "--x-bg-secondary": "bg-hover",
+      "--x-hover-subtle": "bg-hover",
+      "--x-fg-primary": "text",
+      "--x-fg-secondary": "text-2",
+      "--x-fg-brand": "accent",
+      "--x-btn-brand": "accent",
+      "--x-btn-brand-hover": "accent-hover",
+      "--x-btn-brand-pressed": "accent-hover",
+      "--x-border-divider": "border",
+      "--x-border-normal": "border",
+      "--x-font-sans": "font"
+    }
   }
 }

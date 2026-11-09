@@ -8,6 +8,29 @@ const valid = () => ({
   'font-family': { TwitterChirp: 'font' },
   'font-size': { '15px': 'fs-body' },
   'border-radius': { '9999px': 'radius-pill' },
+  xTokens: { light: { '--x-fg-primary': 'text' }, night: { '--x-fg-primary': 'text' } },
+});
+
+test('xTokens are kept per theme', () => {
+  expect(parsePaletteMap(valid()).xTokens).toEqual({
+    light: { '--x-fg-primary': 'text' },
+    night: { '--x-fg-primary': 'text' },
+  });
+});
+
+test('rejects missing xTokens', () => {
+  const { xTokens: _xTokens, ...rest } = valid();
+  expect(() => parsePaletteMap(rest)).toThrow(PaletteMapError);
+});
+
+test('rejects an xTokens name that is not an X token', () => {
+  const bad = { ...valid(), xTokens: { light: { '--other': 'text' }, night: {} } };
+  expect(() => parsePaletteMap(bad)).toThrow(PaletteMapError);
+});
+
+test('rejects an unknown xTokens theme', () => {
+  const bad = { ...valid(), xTokens: { light: {}, night: {}, dim: {} } };
+  expect(() => parsePaletteMap(bad)).toThrow(PaletteMapError);
 });
 
 test('returns a valid map with normalized color keys', () => {

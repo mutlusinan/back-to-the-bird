@@ -12,12 +12,15 @@ export interface PaletteMap {
   'font-family': Record<string, string>;
   'font-size': Record<string, string>;
   'border-radius': Record<string, string>;
+  /** X design token name (`--x-…`) → token name, per theme. */
+  xTokens: Record<Theme, Record<string, string>>;
 }
 
 export class PaletteMapError extends Error {}
 
 const COLOR_PROPERTIES: readonly ColorProperty[] = ['color', 'background-color', 'border-color'];
-const TOP_LEVEL = ['version', 'light', 'night', 'font-family', 'font-size', 'border-radius'];
+const TOP_LEVEL = ['version', 'light', 'night', 'font-family', 'font-size', 'border-radius', 'xTokens'];
+const THEMES: readonly Theme[] = ['light', 'night'];
 
 /** Validates an untrusted palette map and normalizes its color keys. */
 export function parsePaletteMap(json: unknown): PaletteMap {
@@ -35,7 +38,24 @@ export function parsePaletteMap(json: unknown): PaletteMap {
     'font-family': parseTokens(root['font-family'], 'font-family'),
     'font-size': parseTokens(root['font-size'], 'font-size'),
     'border-radius': parseTokens(root['border-radius'], 'border-radius'),
+    xTokens: parseXTokens(root.xTokens),
   };
+}
+
+function parseXTokens(value: unknown): PaletteMap['xTokens'] {
+  const themes = asRecord(value, 'xTokens');
+  for (const key of Object.keys(themes)) {
+    if (!THEMES.includes(key as Theme)) throw new PaletteMapError(`unknown theme: xTokens.${key}`);
+  }
+  const out = {} as PaletteMap['xTokens'];
+  for (const theme of THEMES) {
+    const tokens = parseTokens(themes[theme], `xTokens.${theme}`);
+    for (const name of Object.keys(tokens)) {
+      if (!/^--x-[a-z0-9-]+$/.test(name)) throw new PaletteMapError(`not an X token: xTokens.${theme}.${name}`);
+    }
+    out[theme] = tokens;
+  }
+  return out;
 }
 
 function parseTheme(value: unknown, path: string): PaletteMap['light'] {
