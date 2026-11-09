@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "dataVersion": "2026-11-09.2",
+  "dataVersion": "2026-11-09.3",
   "minExtensionVersion": "1.0.0",
   "maxExtensionVersion": null,
   "selectors": {
@@ -92,7 +92,7 @@
       "[data-testid=\"SideNav_NewTweet_Button\"]"
     ],
     "wordComposeSubmit": [
-      "[data-testid=\"primaryColumn\"]:not(:has([data-testid=\"inline_reply_offscreen\"])) [data-testid=\"tweetButtonInline\"], [role=\"dialog\"]:not(:has(article)) [data-testid=\"tweetButton\"]"
+      "[data-testid=\"primaryColumn\"]:not(:has([data-testid=\"inline_reply_offscreen\"])):not(:has([data-testid=\"tweetTextarea_1\"])) [data-testid=\"tweetButtonInline\"], [role=\"dialog\"]:not(:has(article)):not(:has([data-testid=\"tweetTextarea_1\"])) [data-testid=\"tweetButton\"]"
     ],
     "wordRepostAction": [
       "[data-testid=\"retweetConfirm\"]"
