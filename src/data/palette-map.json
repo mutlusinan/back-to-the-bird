@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "light": {
+    "color": {
+      "rgb(15, 20, 25)": "text",
+      "rgb(83, 100, 113)": "text-2",
+      "rgb(29, 155, 240)": "accent"
+    },
+    "background-color": {
+      "rgb(255, 255, 255)": "bg-card",
+      "rgb(247, 249, 249)": "bg-hover",
+      "rgb(29, 155, 240)": "accent"
+    },
+    "border-color": {
+      "rgb(239, 243, 244)": "border"
+    }
+  },
+  "night": {
+    "color": {
+      "rgb(231, 233, 234)": "text",
+      "rgb(113, 118, 123)": "text-2",
+      "rgb(29, 155, 240)": "accent"
+    },
+    "background-color": {
+      "rgb(0, 0, 0)": "bg-card",
+      "rgb(22, 24, 28)": "bg-hover",
+      "rgb(29, 155, 240)": "accent"
+    },
+    "border-color": {
+      "rgb(47, 51, 54)": "border"
+    }
+  },
+  "font-family": {
+    "TwitterChirp": "font"
+  },
+  "font-size": {
+    "15px": "fs-body"
+  },
+  "border-radius": {
+    "9999px": "radius-pill",
+    "16px": "radius-media"
+  }
+}
