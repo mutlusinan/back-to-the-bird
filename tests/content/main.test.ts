@@ -90,3 +90,16 @@ test('a subframe runs only the engine features and sends no badge', async () => 
   expect(html().hasAttribute('data-ot-f-surfaces')).toBe(false);
   expect(sent.some((m) => m.type === 'ot:badge')).toBe(false);
 });
+
+test('a logo rendered after startup activates branding', async () => {
+  document.body.innerHTML = '<div data-testid="primaryColumn"></div>';
+  running = await main({ doc: document, win: window });
+  await sleep(80);
+  expect(html().hasAttribute('data-ot-f-branding')).toBe(false);
+  const header = document.createElement('header');
+  header.setAttribute('role', 'banner');
+  header.innerHTML = '<h1><a href="/home"><svg></svg></a></h1>';
+  document.body.prepend(header);
+  await sleep(80);
+  expect(html().hasAttribute('data-ot-f-branding')).toBe(true);
+});

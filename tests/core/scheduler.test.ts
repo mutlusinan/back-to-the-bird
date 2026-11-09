@@ -80,6 +80,14 @@ test('a tick that reports more work schedules another tick without mutations', a
   expect(ticks[1]!.added).toEqual([]);
 });
 
+test('added text nodes still tick but are not passed on', async () => {
+  start();
+  document.body.appendChild(document.createTextNode('x'));
+  await vi.advanceTimersByTimeAsync(50);
+  expect(ticks).toHaveLength(1);
+  expect(ticks[0]!.added).toEqual([]);
+});
+
 test('poke requests a tick without any mutation', async () => {
   start();
   scheduler!.poke();

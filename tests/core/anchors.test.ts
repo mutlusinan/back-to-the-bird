@@ -1,4 +1,4 @@
-import { tagAnchors } from '../../src/core/anchors';
+import { tagAdded, tagAnchors } from '../../src/core/anchors';
 import type { SelectorTable } from '../../src/core/selectors';
 
 const table: SelectorTable = {
@@ -30,4 +30,15 @@ test('tagging twice does not duplicate a name', () => {
   tagAnchors(table, ['sideNavLogo'], document);
   tagAnchors(table, ['sideNavLogo'], document);
   expect(document.getElementById('l')!.getAttribute('data-ot')).toBe('sideNavLogo');
+});
+
+test('tagAdded searches only the added elements and their subtrees', () => {
+  document.body.innerHTML = '<div data-testid="primaryColumn" id="old"></div>';
+  const fresh = document.createElement('section');
+  fresh.innerHTML = '<div data-testid="logo" id="l"></div>';
+  document.body.append(fresh);
+  const found = tagAdded(table, ['sideNavLogo', 'primaryColumn'], [document.createTextNode('x'), fresh]);
+  expect([...found]).toEqual(['sideNavLogo']);
+  expect(document.getElementById('l')!.getAttribute('data-ot')).toBe('sideNavLogo');
+  expect(document.getElementById('old')!.hasAttribute('data-ot')).toBe(false);
 });

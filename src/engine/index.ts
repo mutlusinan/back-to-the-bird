@@ -32,6 +32,7 @@ export function createEngine(deps: EngineDeps): Engine {
   const queue: RuleLike[] = [];
   let stats = { readable: 0, unreadable: 0 };
   let applied: string | undefined;
+  let rendered = false;
 
   async function apply(css: string): Promise<void> {
     if (css === applied) return;
@@ -52,6 +53,8 @@ export function createEngine(deps: EngineDeps): Engine {
       const scanned = deps.scan();
       stats = { readable: scanned.readable, unreadable: scanned.unreadable };
       queue.push(...scanned.rules);
+      // Most ticks (scrolling) bring no new rules: skip the render entirely.
+      if (queue.length === 0 && rendered) return false;
       const started = deps.now();
       let processed = 0;
       while (queue.length > 0) {
@@ -61,6 +64,7 @@ export function createEngine(deps: EngineDeps): Engine {
         }
         if (++processed % BUDGET_CHECK_EVERY === 0 && deps.now() - started >= deps.budgetMs) break;
       }
+      rendered = true;
       const overrides = renderOverrides(entries.values());
       await apply(overrides ? `${base}\n${overrides}` : base);
       return queue.length > 0;

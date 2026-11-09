@@ -15,12 +15,14 @@ import { createEngine } from '../../engine';
 import { parsePaletteMap, type PaletteMap, type Theme } from '../../engine/palette-map';
 import { SheetScanner } from '../../engine/scan';
 import { missingXTokens } from '../../engine/xtokens';
+import { tagAdded } from '../../core/anchors';
 import { removeFavicon } from '../../features/branding/favicon';
-import { runFeatures } from '../../features/registry';
+import { DOM_FEATURES, runFeatures } from '../../features/registry';
 
 const ENGINE_FEATURES: readonly FeatureId[] = ['palette', 'font', 'typeScale', 'radius'];
 const LAST_THEME_KEY = 'ot:lastTheme';
 const HEALTH_DELAY_MS = 10_000;
+const DOM_ANCHORS = [...new Set(DOM_FEATURES.flatMap((f) => [...f.requires, ...f.optional]))];
 
 /** Minimal port surface the "show original" handler needs. */
 export interface PortLike {
@@ -151,10 +153,20 @@ export async function main({ doc, win }: { doc: Document; win: Window }): Promis
         handOver();
         return false;
       }
-      if (isTop && (featuresDirty || routeChanged || added.length > 0)) {
-        featuresDirty = false;
-        domActive = runFeatures({ table, doc, health }, enabled());
-        applyAttributes();
+      if (isTop) {
+        // Document-wide pass only when the page or settings changed; otherwise just tag
+        // anchors inside the new elements, and re-run features if one of them can now start.
+        let rerun = featuresDirty || routeChanged;
+        if (!rerun && added.length > 0) {
+          const found = tagAdded(table, DOM_ANCHORS, added);
+          const on = enabled();
+          rerun = DOM_FEATURES.some((f) => on.has(f.id) && !domActive.has(f.id) && f.requires.some((a) => found.has(a)));
+        }
+        if (rerun) {
+          featuresDirty = false;
+          domActive = runFeatures({ table, doc, health }, enabled());
+          applyAttributes();
+        }
       }
       let more = false;
       try {

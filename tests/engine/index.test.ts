@@ -1,4 +1,10 @@
 import { createEngine, type EngineDeps } from '../../src/engine/index';
+import * as remap from '../../src/engine/remap';
+
+vi.mock('../../src/engine/remap', async (importOriginal) => {
+  const original = await importOriginal<typeof import('../../src/engine/remap')>();
+  return { ...original, renderOverrides: vi.fn(original.renderOverrides) };
+});
 import { parsePaletteMap } from '../../src/engine/palette-map';
 import type { RuleLike } from '../../src/engine/remap';
 import type { ScanResult } from '../../src/engine/scan';
@@ -64,6 +70,15 @@ test('a tick without new rules applies nothing', async () => {
   await engine.tick();
   await engine.tick();
   expect(applied).toHaveLength(1);
+});
+
+test('a tick without new work does not re-render the css', async () => {
+  const { engine } = setup([[rule('.r-a')], [], []]);
+  await engine.tick();
+  const renders = vi.mocked(remap.renderOverrides).mock.calls.length;
+  await engine.tick();
+  await engine.tick();
+  expect(vi.mocked(remap.renderOverrides).mock.calls.length).toBe(renders);
 });
 
 test('work beyond the budget continues on later ticks', async () => {

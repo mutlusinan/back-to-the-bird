@@ -28,7 +28,9 @@ export function createScheduler(opts: SchedulerOptions): { start(): void; stop()
   let pollEnd: ReturnType<typeof setTimeout> | undefined;
 
   const observer = new MutationObserver((records) => {
-    for (const record of records) pending.push(...record.addedNodes);
+    for (const record of records) {
+      for (const node of record.addedNodes) if (node.nodeType === Node.ELEMENT_NODE) pending.push(node);
+    }
     schedule();
   });
 
