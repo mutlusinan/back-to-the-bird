@@ -82,5 +82,32 @@
   ],
   "viewCount": [
     "article [role=\"group\"] a[href$=\"/analytics\"]"
+  ],
+  "wordComposeButton": [
+    "[data-testid=\"SideNav_NewTweet_Button\"]"
+  ],
+  "wordComposeSubmit": [
+    "[data-testid=\"primaryColumn\"]:not(:has([data-testid=\"inline_reply_offscreen\"])) [data-testid=\"tweetButtonInline\"], [role=\"dialog\"]:not(:has(article)) [data-testid=\"tweetButton\"]"
+  ],
+  "wordRepostAction": [
+    "[data-testid=\"retweetConfirm\"]"
+  ],
+  "wordUndoRepostAction": [
+    "[data-testid=\"unretweetConfirm\"]"
+  ],
+  "wordQuoteAction": [
+    "[role=\"menu\"] a[role=\"menuitem\"][href=\"/compose/post\"]"
+  ],
+  "wordRepostsLabel": [
+    "a[role=\"tab\"]:is([href$=\"/retweets\"], [href$=\"/reposts\"])"
+  ],
+  "wordQuotesLabel": [
+    "a[role=\"tab\"][href$=\"/quotes\"]"
+  ],
+  "wordLikesLabel": [
+    "a[role=\"tab\"][href$=\"/likes\"]"
+  ],
+  "wordProfilePostsTab": [
+    "[data-testid=\"primaryColumn\"]:has([data-testid=\"UserName\"]) [role=\"tablist\"] [role=\"presentation\"]:first-child > a[role=\"tab\"]"
   ]
 }

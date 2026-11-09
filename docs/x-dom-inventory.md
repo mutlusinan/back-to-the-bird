@@ -202,3 +202,23 @@ ikonlarının renginde `transition: color 0.2s` var. Stil değiştikten hemen
 sonra okunan `getComputedStyle` eski değeri verir; en az 300ms bekleyin.
 
 Durum renkleri kaynağı: `#react-native-stylesheet` kuralları — beğeni `rgb(249, 24, 128)` (hover zemini `rgba(249, 24, 128, 0.1)`), retweet `rgb(0, 186, 124)` (`rgba(0, 186, 124, 0.1)`), vurgu hover zemini `rgba(29, 155, 240, 0.1)`; iki temada aynı değerler.
+
+## 11. M3 sözcük çapaları (2026-11-09, masaüstü 1300px, İngilizce arayüz)
+
+Etiket metni her zaman bir yaprak `<span>`'de; ebeveyni aynı font boyutunda.
+
+| Çapa | Seçici | Yapı / not |
+|---|---|---|
+| `wordComposeButton` | `[data-testid="SideNav_NewTweet_Button"]` | `a > div[dir] > div > span > div > div > span > span{Post}`, 17px; dar ekranda metin yaprağı boş |
+| `wordComposeSubmit` | `[data-testid="primaryColumn"]:not(:has([data-testid="inline_reply_offscreen"])) [data-testid="tweetButtonInline"], [role="dialog"]:not(:has(article)) [data-testid="tweetButton"]` | tweet sayfasındaki satır içi yanıt kutusu `inline_reply_offscreen` içinde ve "Reply" der; yanıt penceresi yanıtlanan tweeti `article` olarak içerir ve "Reply" der. happy-dom `:not(<karmaşık seçici>)`'yi desteklemiyor, `:not(:has())` destekliyor |
+| `wordRepostAction` | `[data-testid="retweetConfirm"]` | menü öğesi `div[role=menuitem] > div > div[dir] > span{Repost}` |
+| `wordUndoRepostAction` | `[data-testid="unretweetConfirm"]` | aynı yapı |
+| `wordQuoteAction` | `[role="menu"] a[role="menuitem"][href="/compose/post"]` | `data-testid` yok |
+| `wordRepostsLabel` | `a[role="tab"]:is([href$="/retweets"], [href$="/reposts"])` | etkileşim sayfası (`/status/<id>/retweets`) ve profil "Reposts" sekmesi |
+| `wordQuotesLabel` | `a[role="tab"][href$="/quotes"]` | etkileşim sayfası |
+| `wordLikesLabel` | `a[role="tab"][href$="/likes"]` | X beğenileri gizlediğinden çoğu sayfada yok |
+| `wordProfilePostsTab` | `[data-testid="primaryColumn"]:has([data-testid="UserName"]) [role="tablist"] [role="presentation"]:first-child > a[role="tab"]` | `span > span{Posts} + span{ } + svg` (sıralama menüsü oku) |
+
+Tweet ayrıntısında artık "Reposts / Quotes / Likes" sayı etiketleri yok (sayılar
+eylem satırında). Profil başlığındaki "5,914 posts" tek metin düğümü; CSS ile
+sadece sözcük değiştirilemez.

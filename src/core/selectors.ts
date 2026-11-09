@@ -25,7 +25,16 @@ export type AnchorName =
   | 'grokTweetButton'
   | 'premiumNav'
   | 'premiumSidebar'
-  | 'viewCount';
+  | 'viewCount'
+  | 'wordComposeButton'
+  | 'wordComposeSubmit'
+  | 'wordRepostAction'
+  | 'wordUndoRepostAction'
+  | 'wordQuoteAction'
+  | 'wordRepostsLabel'
+  | 'wordQuotesLabel'
+  | 'wordLikesLabel'
+  | 'wordProfilePostsTab';
 
 /** Anchor name → selectors in priority order. */
 export type SelectorTable = Record<AnchorName, string[]>;
@@ -58,6 +67,15 @@ export const ANCHOR_NAMES: readonly AnchorName[] = [
   'premiumNav',
   'premiumSidebar',
   'viewCount',
+  'wordComposeButton',
+  'wordComposeSubmit',
+  'wordRepostAction',
+  'wordUndoRepostAction',
+  'wordQuoteAction',
+  'wordRepostsLabel',
+  'wordQuotesLabel',
+  'wordLikesLabel',
+  'wordProfilePostsTab',
 ];
 
 /** Validates an untrusted selector table; every selector must parse. */
