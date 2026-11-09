@@ -1,4 +1,19 @@
 {
   "extName": { "message": "Back to the Bird" },
-  "extDescription": { "message": "Classic Twitter design tokens for X" }
+  "extDescription": { "message": "Classic Twitter design tokens for X" },
+  "featuresTitle": { "message": "Features" },
+  "healthTitle": { "message": "Status on this page" },
+  "featurePalette": { "message": "Colors" },
+  "featureFont": { "message": "Font" },
+  "featureSurfaces": { "message": "Page and cards" },
+  "featureBranding": { "message": "Bird logo and icon" },
+  "status_ok": { "message": "Working" },
+  "status_warn": { "message": "Not found" },
+  "status_error": { "message": "Error" },
+  "status_off": { "message": "Off" },
+  "status_unavailable": { "message": "Unavailable" },
+  "notOnX": { "message": "Open x.com to see status" },
+  "showOriginal": { "message": "Hold to show original" },
+  "copyReport": { "message": "Copy report" },
+  "copied": { "message": "Report copied. It holds no username, link or content." }
 }
