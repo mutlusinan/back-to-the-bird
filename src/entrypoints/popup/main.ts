@@ -89,8 +89,12 @@ function bindShowOriginal(tab: Browser.tabs.Tab | undefined): void {
   };
   const release = () => {
     if (!port) return;
-    port.postMessage({ hold: false });
-    port.disconnect();
+    try {
+      port.postMessage({ hold: false });
+      port.disconnect();
+    } catch {
+      // tab without our content script: the port is already gone
+    }
     port = undefined;
   };
   button.addEventListener('pointerdown', press);

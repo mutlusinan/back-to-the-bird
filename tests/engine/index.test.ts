@@ -63,7 +63,7 @@ test('a matching rule is applied, cached and recorded', async () => {
   expect(applied[0]).toContain('!important');
   expect(store.get('ot:engineCss:v3')).toBe(applied[0]);
   expect(engine.matchedKeys().has('light:color:accent')).toBe(true);
-  expect(engine.sheetStats()).toEqual({ readable: 1, unreadable: 0 });
+  expect(engine.sheetStats()).toEqual({ readable: 1, unreadable: 0, rules: 1 });
 });
 
 test('a tick without new rules applies nothing', async () => {
@@ -119,4 +119,11 @@ test('switched-on engine features produce their rules', async () => {
   await engine.tick();
   expect(applied[0]).toContain('html[data-ot-f-typeScale] .r-mix{font-size:var(--ot-fs-body)}');
   expect(applied[0]).toContain('html[data-ot-f-radius] .r-mix{border-top-left-radius:var(--ot-radius-pill)}');
+});
+
+test('sheet stats count the rules scanned so far', async () => {
+  const { engine } = setup([[rule('.r-a'), rule('.r-b')], [rule('.r-c')]]);
+  await engine.tick();
+  await engine.tick();
+  expect(engine.sheetStats()).toEqual({ readable: 1, unreadable: 0, rules: 3 });
 });

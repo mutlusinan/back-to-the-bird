@@ -67,3 +67,9 @@ test('our own sheets are skipped', () => {
   addStyle('.own{color:red}', { 'data-ot': '' });
   expect(new SheetScanner(document).scanNew().rules).toEqual([]);
 });
+
+test('rules inside any grouping rule (@supports) are returned', () => {
+  addStyle('@supports (display: grid) { .s{color:red} }');
+  const [rule] = new SheetScanner(document).scanNew().rules;
+  expect(rule!.selectorText).toBe('.s');
+});

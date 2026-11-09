@@ -7,7 +7,9 @@ Her yayından önce Chrome ve Firefox'ta, X'e giriş yapılmış bir profille.
 - Chrome: `npm run build` → `chrome://extensions` → Geliştirici modu →
   "Paketlenmemiş öğe yükle" → `.output/chrome-mv3`.
 - Firefox: `npm run build:firefox` → `about:debugging#/runtime/this-firefox` →
-  "Geçici eklenti yükle" → `.output/firefox-mv3/manifest.json`.
+  "Geçici eklenti yükle" → `.output/firefox-mv3/manifest.json`. Firefox MV3 site
+  izinlerini kendiliğinden vermez: araç çubuğundaki eklenti simgesine sağ tıkla →
+  "x.com'da her zaman izin ver".
 
 ## Liste
 

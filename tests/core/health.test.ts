@@ -22,26 +22,26 @@ function memoryStore() {
 test('a key unmatched on three consecutive loads is reported on the third', async () => {
   const store = memoryStore();
   const matched = new Set(['light:color:text']);
-  expect(await createHealth(store).recordPalette('light', matched, map)).toEqual([]);
-  expect(await createHealth(store).recordPalette('light', matched, map)).toEqual([]);
+  expect(await createHealth(store).recordPalette('light', matched, map, 1000)).toEqual([]);
+  expect(await createHealth(store).recordPalette('light', matched, map, 1000)).toEqual([]);
   const third = createHealth(store);
-  expect(await third.recordPalette('light', matched, map)).toEqual(['light:color:accent']);
+  expect(await third.recordPalette('light', matched, map, 1000)).toEqual(['light:color:accent']);
   expect(third.snapshot().paletteMisses).toEqual(['light:color:accent']);
 });
 
 test('one match in between resets the counter', async () => {
   const store = memoryStore();
   const none = new Set<string>();
-  await createHealth(store).recordPalette('light', none, map);
-  await createHealth(store).recordPalette('light', new Set(['light:color:accent', 'light:color:text']), map);
-  await createHealth(store).recordPalette('light', none, map);
-  expect(await createHealth(store).recordPalette('light', none, map)).toEqual([]);
+  await createHealth(store).recordPalette('light', none, map, 1000);
+  await createHealth(store).recordPalette('light', new Set(['light:color:accent', 'light:color:text']), map, 1000);
+  await createHealth(store).recordPalette('light', none, map, 1000);
+  expect(await createHealth(store).recordPalette('light', none, map, 1000)).toEqual([]);
 });
 
 test('keys of the other theme are not counted', async () => {
   const store = memoryStore();
   const all = new Set(['light:color:accent', 'light:color:text']);
-  for (let i = 0; i < 3; i++) expect(await createHealth(store).recordPalette('light', all, map)).toEqual([]);
+  for (let i = 0; i < 3; i++) expect(await createHealth(store).recordPalette('light', all, map, 1000)).toEqual([]);
 });
 
 test('level is error for any error or when no stylesheet is readable', () => {
@@ -66,4 +66,18 @@ test('a feature reported ok with optional anchors missing keeps level ok', () =>
   h.setSheets({ readable: 1, unreadable: 1 });
   h.setFeature('surfaces', 'ok');
   expect(h.level()).toBe('ok');
+});
+
+
+test('sparse pages are not counted', async () => {
+  const store = memoryStore();
+  for (let i = 0; i < 3; i++) expect(await createHealth(store).recordPalette('light', new Set(), map, 20)).toEqual([]);
+  expect(await store.get('ot:paletteMisses:light')).toBeUndefined();
+});
+
+test('misses are stored per theme', async () => {
+  const store = memoryStore();
+  await createHealth(store).recordPalette('light', new Set(), map, 1000);
+  expect(await store.get('ot:paletteMisses:light')).toEqual({ 'light:color:accent': 1, 'light:color:text': 1 });
+  expect(await store.get('ot:paletteMisses:night')).toBeUndefined();
 });

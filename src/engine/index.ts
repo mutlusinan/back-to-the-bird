@@ -21,7 +21,8 @@ export interface Engine {
   /** Processes new rules within the time budget; true when work remains. */
   tick(): Promise<boolean>;
   matchedKeys(): ReadonlySet<string>;
-  sheetStats(): { readable: number; unreadable: number };
+  /** Sheets readable/unreadable now, and style rules scanned since start. */
+  sheetStats(): { readable: number; unreadable: number; rules: number };
 }
 
 const BUDGET_CHECK_EVERY = 100;
@@ -32,7 +33,7 @@ export function createEngine(deps: EngineDeps): Engine {
   const entries = new Map<string, RemapEntry>();
   const matched = new Set<string>();
   const queue: RuleLike[] = [];
-  let stats = { readable: 0, unreadable: 0 };
+  let stats = { readable: 0, unreadable: 0, rules: 0 };
   let applied: string | undefined;
   let rendered = false;
 
@@ -53,7 +54,7 @@ export function createEngine(deps: EngineDeps): Engine {
 
     async tick() {
       const scanned = deps.scan();
-      stats = { readable: scanned.readable, unreadable: scanned.unreadable };
+      stats = { readable: scanned.readable, unreadable: scanned.unreadable, rules: stats.rules + scanned.rules.length };
       queue.push(...scanned.rules);
       // Most ticks (scrolling) bring no new rules: skip the render entirely.
       if (queue.length === 0 && rendered) return false;

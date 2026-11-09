@@ -53,3 +53,15 @@ test('closing the popup while holding restores the skin', () => {
   p.disconnect();
   expect(otAttributes()).toContain('data-ot-f-palette');
 });
+
+test('the bird favicon goes away while held and comes back', async () => {
+  document.body.insertAdjacentHTML('afterbegin', '<header role="banner"><h1><a href="/home"><svg></svg></a></h1></header>');
+  await sleep(80);
+  expect(document.querySelector('link[rel="icon"][data-ot]')).not.toBeNull();
+  const p = fakePort();
+  attachShowOriginalPort(p.port, controller!.setShowOriginal);
+  p.send({ hold: true });
+  expect(document.querySelector('link[rel="icon"][data-ot]')).toBeNull();
+  p.send({ hold: false });
+  expect(document.querySelector('link[rel="icon"][data-ot]')).not.toBeNull();
+});

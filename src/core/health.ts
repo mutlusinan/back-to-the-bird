@@ -14,8 +14,11 @@ export interface Health {
   setFeature(id: FeatureId, status: FeatureStatus, detail?: string): void;
   error(feature: FeatureId | 'core', err: unknown): void;
   setSheets(s: { readable: number; unreadable: number }): void;
-  /** Counts consecutive page loads each palette entry of `theme` went unmatched; returns entries at the threshold. */
-  recordPalette(theme: Theme, matched: ReadonlySet<string>, map: PaletteMap): Promise<string[]>;
+  /**
+   * Counts consecutive page loads each palette entry of `theme` went unmatched; returns entries at
+   * the threshold. Pages with fewer than MIN_RULES scanned rules (login flows, sparse pages) are skipped.
+   */
+  recordPalette(theme: Theme, matched: ReadonlySet<string>, map: PaletteMap, readableRules: number): Promise<string[]>;
   snapshot(): HealthSnapshot;
   level(): 'ok' | 'warn' | 'error';
 }
@@ -26,6 +29,7 @@ export interface HealthStore {
 }
 
 const MISSES_KEY = 'ot:paletteMisses';
+const MIN_RULES = 500;
 
 export function createHealth(store: HealthStore): Health {
   const state: HealthSnapshot = { features: {}, paletteMisses: [], sheets: { readable: 0, unreadable: 0 }, errors: [] };
@@ -40,8 +44,10 @@ export function createHealth(store: HealthStore): Health {
     setSheets(s) {
       state.sheets = { ...s };
     },
-    async recordPalette(theme, matched, map) {
-      const counts = { ...((await store.get(MISSES_KEY)) as Record<string, number> | undefined) };
+    async recordPalette(theme, matched, map, readableRules) {
+      if (readableRules < MIN_RULES) return [];
+      const storeKey = `${MISSES_KEY}:${theme}`;
+      const counts = { ...((await store.get(storeKey)) as Record<string, number> | undefined) };
       const misses: string[] = [];
       for (const [property, entries] of Object.entries(map[theme])) {
         for (const token of new Set(Object.values(entries ?? {}))) {
@@ -50,7 +56,7 @@ export function createHealth(store: HealthStore): Health {
           if (counts[key]! >= PALETTE_MISS_THRESHOLD) misses.push(key);
         }
       }
-      await store.set(MISSES_KEY, counts);
+      await store.set(storeKey, counts);
       state.paletteMisses = misses;
       return misses;
     },

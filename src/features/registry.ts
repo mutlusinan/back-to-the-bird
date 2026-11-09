@@ -23,6 +23,8 @@ export const DOM_FEATURES: readonly Feature[] = [
 
 /** Features that threw during this page session stay off until reload. */
 const failed = new Set<FeatureId>();
+/** Features already cleaned up after being switched off; cleanup is not repeated every tick. */
+const cleanedUp = new Set<FeatureId>();
 
 /**
  * Tags each enabled feature's anchors and applies it when its required anchors
@@ -35,10 +37,12 @@ export function runFeatures(ctx: FeatureContext, enabled: ReadonlySet<FeatureId>
     if (failed.has(feature.id)) continue;
     try {
       if (!enabled.has(feature.id)) {
-        feature.cleanup(ctx);
+        if (!cleanedUp.has(feature.id)) feature.cleanup(ctx);
+        cleanedUp.add(feature.id);
         ctx.health.setFeature(feature.id, 'off');
         continue;
       }
+      cleanedUp.delete(feature.id);
       const found = tagAnchors(ctx.table, [...feature.requires, ...feature.optional], ctx.doc);
       const missing = feature.requires.filter((name) => !found.has(name));
       if (missing.length > 0) {

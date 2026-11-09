@@ -12,7 +12,7 @@ import { loadSettings, watchSettings, type Settings } from '../../core/settings'
 import { detectTheme, watchTheme } from '../../core/theme';
 import paletteMapJson from '../../data/palette-map.json';
 import selectorsJson from '../../data/selectors.json';
-import { createEngine } from '../../engine';
+import { createEngine, type Engine } from '../../engine';
 import { parsePaletteMap, type PaletteMap, type Theme } from '../../engine/palette-map';
 import type { EngineFeature } from '../../engine/remap';
 import { SheetScanner } from '../../engine/scan';
@@ -214,14 +214,19 @@ export async function main({
 
   const setShowOriginal = (hold: boolean) => {
     showingOriginal = hold;
-    if (hold) clearHtmlAttributes(html);
-    else applyAttributes();
+    if (hold) {
+      clearHtmlAttributes(html);
+      if (doc.head) removeFavicon(doc.head);
+    } else {
+      if (isTop) domActive = runFeatures({ table, doc, health }, enabled());
+      applyAttributes();
+    }
   };
 
   if (isTop) {
     const timer = setTimeout(() => {
       graceOver = true;
-      void checkPalette(health, engine.matchedKeys(), map, theme, html).then(() => scheduler.poke());
+      void checkPalette(health, engine, map, theme, html).then(() => scheduler.poke());
     }, graceMs);
     cleanups.push(() => clearTimeout(timer));
 
@@ -251,8 +256,8 @@ export async function main({
   return { stop: stopAll, setShowOriginal };
 }
 
-async function checkPalette(health: Health, matched: ReadonlySet<string>, map: PaletteMap, theme: Theme, html: HTMLElement) {
-  await health.recordPalette(theme, matched, map).catch(() => []);
+async function checkPalette(health: Health, engine: Engine, map: PaletteMap, theme: Theme, html: HTMLElement) {
+  await health.recordPalette(theme, engine.matchedKeys(), map, engine.sheetStats().rules).catch(() => []);
   const missing = missingXTokens(map, theme, (name) => getComputedStyle(html).getPropertyValue(name));
   if (missing.length > 0) health.setFeature('palette', 'warn', missing.join(', '));
 }

@@ -48,9 +48,10 @@ export class SheetScanner {
         const style = (rule as CSSStyleRule).style;
         const selectorText = (rule as CSSStyleRule).selectorText;
         out.push(media === undefined ? { selectorText, style } : { selectorText, style, media });
-      } else if ('media' in rule && 'cssRules' in rule) {
-        const condition = (rule as CSSMediaRule).media.mediaText;
-        this.collect((rule as CSSMediaRule).cssRules, condition, out);
+      } else if ('cssRules' in rule) {
+        // @media keeps its condition; other grouping rules (@supports, @layer, @container) are flattened.
+        const condition = 'media' in rule ? (rule as CSSMediaRule).media.mediaText : media;
+        this.collect((rule as CSSGroupingRule).cssRules, condition, out);
       }
     }
   }
