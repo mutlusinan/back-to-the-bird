@@ -364,6 +364,39 @@ test('inline overrides do not let background-color match color', () => {
 
 - [ ] **Step 5: Commit** — `git commit -m "feat(engine): remap stylesheet rules to era tokens"`
 
+### Task 3b: X token katmanı (spec §8.7)
+
+M0'dan sonra eklendi: X'in yeni bileşenleri renk ve fontu `--x-*` token'larından alıyor.
+
+**Files:**
+- Modify: `src/engine/palette-map.ts`, `src/data/palette-map.json`
+- Create: `src/engine/xtokens.ts`
+- Test: `tests/engine/palette-map.test.ts`, `tests/engine/xtokens.test.ts`
+
+**Interfaces:**
+- Consumes: `PaletteMap`, `parsePaletteMap` (Task 2).
+- Produces:
+  ```ts
+  // palette-map.ts — PaletteMap'e eklenen alan (zorunlu)
+  xTokens: Record<Theme, Record<string, string>>;   // '--x-…' → token
+  // xtokens.ts
+  export function renderXTokenOverrides(map: PaletteMap): string;
+  export function missingXTokens(map: PaletteMap, theme: Theme, read: (name: string) => string): string[];
+  ```
+
+- [ ] **Step 1: Failing testler**
+  - `parsePaletteMap`: `xTokens` eksikse, bir anahtar `--x-` ile başlamıyorsa ya da tema `light`/`night` dışındaysa `PaletteMapError`.
+  - `renderXTokenOverrides` ile `xTokens: { light: { '--x-fg-primary': 'text', '--x-font-sans': 'font' }, night: { '--x-fg-primary': 'text' } }` →
+    `html[data-ot-f-palette][data-ot-theme="light"]{--x-fg-primary:var(--ot-text)}`,
+    `html[data-ot-f-font]{--x-font-sans:var(--ot-font)}` (font token'ı temadan bağımsız ve `font` özelliğine bağlı),
+    `html[data-ot-f-palette][data-ot-theme="night"]{--x-fg-primary:var(--ot-text)}`, satırları bu sırayla ve `\n` ile.
+  - `missingXTokens(map, 'light', read)`: `read('--x-fg-primary')` boş dönerse `['--x-fg-primary']`; dolu dönerse `[]`; gece tablosundaki adlar kontrol edilmez.
+
+- [ ] **Step 2: Fail** — Run: `npx vitest run tests/engine/palette-map.test.ts tests/engine/xtokens.test.ts` → FAIL.
+- [ ] **Step 3: Uygula** — `palette-map.json`'ı `docs/x-dom-inventory.md` §3 ve §6'ya göre güncelle: renk tabloları (rol tablosu) ve `xTokens` (en az `--x-bg-primary`, `--x-bg-modal`, `--x-bg-sheets` → `bg-card`; `--x-bg-secondary`, `--x-hover-subtle` → `bg-hover`; `--x-fg-primary` → `text`; `--x-fg-secondary` → `text-2`; `--x-fg-brand`, `--x-btn-brand` → `accent`; `--x-btn-brand-hover`, `--x-btn-brand-pressed` → `accent-hover`; `--x-border-divider`, `--x-border-normal` → `border`; `--x-font-sans` → `font`; her iki tema).
+- [ ] **Step 4: Pass** — aynı komut ve `npx vitest run` → PASS.
+- [ ] **Step 5: Commit** — `git commit -m "feat(engine): override X design tokens"`
+
 ### Task 4: Stil sayfası tarayıcı
 
 **Files:**
@@ -423,7 +456,7 @@ test('inline overrides do not let background-color match color', () => {
   }
   export function createEngine(deps: EngineDeps): Engine;
   ```
-  Önbellek anahtarı: `` `ot:engineCss:v${map.version}` ``. Uygulanan CSS = `renderInlineOverrides(map)` + `\n` + tüm girişlerin `renderOverrides`'ı.
+  Önbellek anahtarı: `` `ot:engineCss:v${map.version}` ``. Uygulanan CSS = `renderXTokenOverrides(map)` + `\n` + `renderInlineOverrides(map)` + `\n` + tüm girişlerin `renderOverrides`'ı (Task 3b'den sonra).
 
 - [ ] **Step 1: Failing testler** (sahte bağımlılıklarla)
   - `start()` önbellekte değer varsa `applyCss`'i o değerle bir kez çağırır; yoksa çağırmaz.
@@ -660,6 +693,8 @@ test('inline overrides do not let background-color match color', () => {
 7. `watchSettings` → öznitelikleri yeniden uygula.
 
 Bütün `browser.*` çağrıları `try/catch` içinde; eklenti bağlamı geçersizse içerik betiği sessizce durur (`stop()`), sayfa X'in görünümünde kalır.
+
+**Iframe'ler (spec §8.8):** içerik betiği `allFrames: true`. `main({ doc, win })` `win !== win.top` ise sadece öznitelikleri (`palette`, `font`) ve motoru çalıştırır; `runFeatures`, rozet, `ot:getHealth` ve "Orijinali göster" portu sadece üst çerçevede. Ek test: `main` bir alt çerçeve olarak çağrılınca (`win.top` farklı bir nesne) `data-ot-f-surfaces` konmaz ve hiç `ot:badge` mesajı gitmez. Üst çerçevede açılıştan 10 s sonra `missingXTokens(map, theme, (n) => getComputedStyle(html).getPropertyValue(n))` boş değilse `health.setFeature('palette', 'warn', '<ad> bulunamadı')`.
 
 `background.ts`: `runtime.onMessage` `ot:css` → `createCssInjector` (gerçek `browser.scripting` ile, `origin: 'AUTHOR'`); `ot:badge` → `action.setBadgeText({ tabId, text: level === 'ok' ? '' : '!' })`; `tabs.onRemoved` → `forget`.
 

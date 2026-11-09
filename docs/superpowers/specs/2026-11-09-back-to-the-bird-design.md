@@ -273,7 +273,11 @@ satırıdır.
   },
   "font-family": { "TwitterChirp": "font" },
   "font-size":   { "15px": "fs-body" },
-  "border-radius": { "9999px": "radius-pill", "16px": "radius-media" }
+  "border-radius": { "9999px": "radius-pill", "16px": "radius-media" },
+  "xTokens": {
+    "light": { "--x-fg-primary": "text", "--x-fg-brand": "accent" },
+    "night": { "--x-fg-primary": "text", "--x-fg-brand": "accent" }
+  }
 }
 ```
 
@@ -341,7 +345,36 @@ geçersiz olur.
 - Hiçbir stil sayfası okunamıyorsa motor kapanır; diğer özellikler
   çalışmaya devam eder.
 
-### 8.7 Plan B
+### 8.7 X token katmanı
+
+M0 envanteri (`docs/x-dom-inventory.md`), X'in yeni bileşenlerinin renk ve
+fontu sabit değer yerine kendi tasarım token'larından (`--x-fg-primary`,
+`--x-btn-brand`, `--x-font-sans` vb., `<html>` üzerinde) aldığını gösterdi.
+Bu bileşenlerin ana stil dosyası okunamaz, ama token'lar ezilebilir:
+
+- `palette-map.json`'a `xTokens` alanı eklenir: X token adı → bizim token
+  adımız, tema başına:
+  `"xTokens": { "light": { "--x-fg-primary": "text", … }, "night": { … } }`.
+- Motor bundan tema kapsamlı değişken atamaları üretir ve diğer kurallarla
+  aynı CSS'e ekler:
+  `html[data-ot-f-palette][data-ot-theme="light"]{--x-fg-primary:var(--ot-text)}`.
+  Bu seçici X'in `:root`/`:root[data-theme=…]` tanımlarından daha özeldir.
+- `--x-font-sans` `font` özelliğine (`data-ot-f-font`) bağlıdır.
+- **Sağlık:** `xTokens`'taki bir ad `<html>`'in hesaplanmış stilinde yoksa
+  (X token'ı kaldırmış ya da yeniden adlandırmış) o anki tema için
+  `palette: <token> bulunamadı` uyarısı verilir.
+- Token adları X'e bağlı bilgidir; ilke 4 gereği sadece `palette-map.json`'da
+  durur ve uzaktan güncellenebilir.
+
+### 8.8 Iframe'ler
+
+X'in sohbeti aynı kökenli bir iframe'de (`https://x.com/i/chat…`) açılır.
+İçerik betiği `allFrames: true` ile çalışır. Alt çerçevelerde sadece motor
+(renk, font, X token katmanı) çalışır; DOM özellikleri, sağlık rozeti ve popup
+mesajları sadece üst çerçevededir. Böylece logosu ya da yan sütunu olmayan
+iframe'ler sahte uyarı üretmez.
+
+### 8.9 Plan B
 
 M0, X'in renklerini okunabilir bir stil sayfasından almadığını gösterirse
 motor yerine çapalara bağlı elle yazılmış CSS kullanılır: sayfa zemini,
@@ -616,9 +649,13 @@ olmadığı kontrol edilir. Canlı X'e otomatik giriş yapan test yoktur.
 
 ## 19. M0'da doğrulanacak varsayımlar
 
+M0 sonuçları (2026-11-09): `docs/x-dom-inventory.md`. Karar ENGINE; ek
+olarak §8.7 (X token katmanı) ve §8.8 (iframe'ler). Satır içi renkler
+beklenenden çok daha yaygın, bu yüzden §8.4 kritik.
+
 | Varsayım | Doğru değilse |
 |---|---|
-| X'in otomatik class kuralları içerik betiğinden okunabilen bir stil sayfasında | Plan B (§8.7) |
+| X'in otomatik class kuralları içerik betiğinden okunabilen bir stil sayfasında | Plan B (§8.9) |
 | Renkler büyük ölçüde class kurallarında, satır içi stil az | Satır içi kurallar genişletilir |
 | İkonlar `currentColor` kullanıyor | `fill` için ayrı eşleme tablosu |
 | X temayı `<body>`'nin satır içi `background-color`'ına yazıyor | `meta[name=theme-color]` ya da başka bir sinyal |
