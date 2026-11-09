@@ -5,7 +5,7 @@ const FAKED = [
   'requestAnimationFrame', 'cancelAnimationFrame', 'Date',
 ] as const;
 
-let scheduler: { start(): void; stop(): void } | undefined;
+let scheduler: { start(): void; stop(): void; poke(): void } | undefined;
 let ticks: TickInfo[];
 
 function start(onTick: (info: TickInfo) => boolean | Promise<boolean> = () => false, early = { ms: 500, duration: 0 }) {
@@ -78,6 +78,14 @@ test('a tick that reports more work schedules another tick without mutations', a
   await vi.advanceTimersByTimeAsync(100);
   expect(ticks).toHaveLength(2);
   expect(ticks[1]!.added).toEqual([]);
+});
+
+test('poke requests a tick without any mutation', async () => {
+  start();
+  scheduler!.poke();
+  await vi.advanceTimersByTimeAsync(50);
+  expect(ticks).toHaveLength(1);
+  expect(ticks[0]!.added).toEqual([]);
 });
 
 test('no ticks run after stop', async () => {

@@ -1,0 +1,230 @@
+import { browser } from 'wxt/browser';
+import { ENGINE_BUDGET_MS, IMPLEMENTED_FEATURES, type FeatureId } from '../../config';
+import { applyHtmlAttributes, clearHtmlAttributes } from '../../core/attributes';
+import { createHealth, type Health, type HealthStore } from '../../core/health';
+import { createInjector } from '../../core/inject';
+import { SHOW_ORIGINAL_PORT, type HealthResponse, type ToBackground } from '../../core/messages';
+import { classifyRoute } from '../../core/route';
+import { createScheduler } from '../../core/scheduler';
+import { parseSelectorTable, type SelectorTable } from '../../core/selectors';
+import { loadSettings, watchSettings, type Settings } from '../../core/settings';
+import { detectTheme, watchTheme } from '../../core/theme';
+import paletteMapJson from '../../data/palette-map.json';
+import selectorsJson from '../../data/selectors.json';
+import { createEngine } from '../../engine';
+import { parsePaletteMap, type PaletteMap, type Theme } from '../../engine/palette-map';
+import { SheetScanner } from '../../engine/scan';
+import { missingXTokens } from '../../engine/xtokens';
+import { runFeatures } from '../../features/registry';
+
+const ENGINE_FEATURES: readonly FeatureId[] = ['palette', 'font', 'typeScale', 'radius'];
+const LAST_THEME_KEY = 'ot:lastTheme';
+const HEALTH_DELAY_MS = 10_000;
+
+/** Minimal port surface the "show original" handler needs. */
+export interface PortLike {
+  name: string;
+  onMessage: { addListener(cb: (m: unknown) => void): void };
+  onDisconnect: { addListener(cb: () => void): void };
+}
+
+export interface ContentController {
+  stop(): void;
+  /** True while the popup's "show original" is held. */
+  setShowOriginal(hold: boolean): void;
+}
+
+const localStore: HealthStore & { get(k: string): Promise<unknown> } = {
+  get: async (k) => (await browser.storage.local.get(k))[k],
+  set: async (k, v) => browser.storage.local.set({ [k]: v }),
+};
+
+/** Wires a popup port to the controller; letting go or closing the popup restores the skin. */
+export function attachShowOriginalPort(port: PortLike, set: (hold: boolean) => void): void {
+  port.onMessage.addListener((m) => set(Boolean((m as { hold?: unknown } | null)?.hold)));
+  port.onDisconnect.addListener(() => set(false));
+}
+
+/**
+ * Content script entry. The top frame runs everything; subframes (X's chat
+ * iframe) run only the engine features, so they never report missing anchors.
+ */
+export async function main({ doc, win }: { doc: Document; win: Window }): Promise<ContentController> {
+  const isTop = win.top === win;
+  const html = doc.documentElement;
+  const health = createHealth(localStore);
+  const cleanups: (() => void)[] = [];
+  const noop: ContentController = { stop: () => {}, setShowOriginal: () => {} };
+
+  let map: PaletteMap;
+  let table: SelectorTable;
+  let settings: Settings;
+  let theme: Theme;
+  try {
+    map = parsePaletteMap(paletteMapJson);
+    table = parseSelectorTable(selectorsJson);
+    const [loaded, lastTheme] = await Promise.all([loadSettings(), localStore.get(LAST_THEME_KEY)]);
+    settings = loaded;
+    theme = (doc.body && detectTheme(doc.body)) ?? (lastTheme === 'night' ? 'night' : 'light');
+  } catch (err) {
+    health.error('core', err);
+    return noop; // bad data or a dead extension context: leave X untouched
+  }
+
+  let domActive: ReadonlySet<FeatureId> = new Set();
+  let showingOriginal = false;
+  let stopped = false;
+
+  const enabled = (): Set<FeatureId> => new Set(IMPLEMENTED_FEATURES.filter((id) => settings.features[id]));
+  const active = (): Set<FeatureId> =>
+    new Set([...IMPLEMENTED_FEATURES.filter((id) => ENGINE_FEATURES.includes(id)), ...domActive]);
+  const applyAttributes = () => {
+    if (!showingOriginal && !stopped) applyHtmlAttributes(html, settings, theme, active());
+  };
+  const send = async (m: ToBackground) => (await browser.runtime.sendMessage(m)) as { ok: boolean } | undefined;
+  const sendQuietly = (m: ToBackground) => void send(m).catch(() => {});
+
+  applyAttributes();
+
+  const scanner = new SheetScanner(doc);
+  const engine = createEngine({
+    map,
+    scan: () => scanner.scanNew(),
+    applyCss: createInjector(doc, send),
+    cache: {
+      get: async (k) => {
+        const v = await localStore.get(k).catch(() => undefined);
+        return typeof v === 'string' ? v : undefined;
+      },
+      set: (k, v) => localStore.set(k, v).catch(() => {}),
+    },
+    now: () => performance.now(),
+    budgetMs: ENGINE_BUDGET_MS,
+  });
+  await engine.start().catch((err) => health.error('core', err));
+
+  const setTheme = (next: Theme) => {
+    if (next === theme) return;
+    theme = next;
+    applyAttributes();
+    void localStore.set(LAST_THEME_KEY, next).catch(() => {});
+  };
+  const bindTheme = () => {
+    const detected = detectTheme(doc.body);
+    if (detected) setTheme(detected);
+    cleanups.push(watchTheme(doc.body, setTheme));
+  };
+  if (doc.body) bindTheme();
+  else {
+    const waitBody = new MutationObserver(() => {
+      if (!doc.body) return;
+      waitBody.disconnect();
+      bindTheme();
+    });
+    waitBody.observe(html, { childList: true });
+    cleanups.push(() => waitBody.disconnect());
+  }
+
+  let lastLevel: string | undefined;
+  let featuresDirty = true;
+  const scheduler = createScheduler({
+    root: html,
+    onTick: async ({ added, routeChanged }) => {
+      if (isTop && (featuresDirty || routeChanged || added.length > 0)) {
+        featuresDirty = false;
+        domActive = runFeatures({ table, doc, health }, enabled());
+        applyAttributes();
+      }
+      let more = false;
+      try {
+        more = await engine.tick();
+      } catch (err) {
+        health.error('core', err);
+      }
+      health.setSheets(engine.sheetStats());
+      if (isTop) {
+        const level = health.level();
+        if (level !== lastLevel) {
+          lastLevel = level;
+          sendQuietly({ type: 'ot:badge', level });
+        }
+      }
+      return more;
+    },
+  });
+  scheduler.start();
+  scheduler.poke();
+  cleanups.push(() => scheduler.stop());
+
+  cleanups.push(
+    watchSettings((next) => {
+      settings = next;
+      featuresDirty = true;
+      applyAttributes();
+      scheduler.poke();
+    }),
+  );
+
+  const setShowOriginal = (hold: boolean) => {
+    showingOriginal = hold;
+    if (hold) clearHtmlAttributes(html);
+    else applyAttributes();
+  };
+
+  if (isTop) {
+    const timer = setTimeout(() => void checkPalette(health, engine.matchedKeys(), map, theme, html), HEALTH_DELAY_MS);
+    cleanups.push(() => clearTimeout(timer));
+
+    // sendResponse rather than a returned Promise: Chrome does not honour promise returns here.
+    const onMessage = (m: unknown, _sender: unknown, sendResponse: (r: HealthResponse) => void) => {
+      if ((m as { type?: string } | null)?.type === 'ot:getHealth') {
+        sendResponse(healthResponse(health, map, settings, theme, doc));
+      }
+      return undefined;
+    };
+    const onConnect = (port: PortLike) => {
+      if (port.name === SHOW_ORIGINAL_PORT) attachShowOriginalPort(port, setShowOriginal);
+    };
+    try {
+      browser.runtime.onMessage.addListener(onMessage);
+      browser.runtime.onConnect.addListener(onConnect as never);
+      cleanups.push(() => {
+        browser.runtime.onMessage.removeListener(onMessage);
+        browser.runtime.onConnect.removeListener(onConnect as never);
+      });
+    } catch {
+      // not available (tests or a dead extension context)
+    }
+  }
+
+  return {
+    stop() {
+      stopped = true;
+      for (const cleanup of cleanups) cleanup();
+    },
+    setShowOriginal,
+  };
+}
+
+async function checkPalette(health: Health, matched: ReadonlySet<string>, map: PaletteMap, theme: Theme, html: HTMLElement) {
+  await health.recordPalette(theme, matched, map).catch(() => []);
+  const missing = missingXTokens(map, theme, (name) => getComputedStyle(html).getPropertyValue(name));
+  if (missing.length > 0) health.setFeature('palette', 'warn', missing.join(', '));
+}
+
+function healthResponse(health: Health, map: PaletteMap, settings: Settings, theme: Theme, doc: Document): HealthResponse {
+  const main = doc.querySelector<HTMLScriptElement>('script[src*="/main."]');
+  const build = main ? /main\.([a-z0-9]+)\.js/.exec(main.src) : null;
+  return {
+    snapshot: health.snapshot(),
+    meta: {
+      extensionVersion: browser.runtime.getManifest().version,
+      paletteMapVersion: map.version,
+      xBuild: build?.[1] ?? null,
+      lang: doc.documentElement.lang,
+      theme,
+      era: settings.era,
+      pageType: classifyRoute(doc.location.pathname),
+    },
+  };
+}

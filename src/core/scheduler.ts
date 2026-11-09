@@ -16,7 +16,7 @@ export interface SchedulerOptions {
  * most one tick per animation frame. Route changes are detected by comparing
  * `location.href` each tick (X's own `pushState` is never patched).
  */
-export function createScheduler(opts: SchedulerOptions): { start(): void; stop(): void } {
+export function createScheduler(opts: SchedulerOptions): { start(): void; stop(): void; poke(): void } {
   const { root, onTick, earlyPollMs = 500, earlyPollDurationMs = 10_000 } = opts;
   let pending: Node[] = [];
   let lastHref = location.href;
@@ -77,6 +77,10 @@ export function createScheduler(opts: SchedulerOptions): { start(): void; stop()
         pollTimer = setInterval(schedule, earlyPollMs);
         pollEnd = setTimeout(() => clearInterval(pollTimer), earlyPollDurationMs);
       }
+    },
+    /** Requests a tick even without DOM changes (e.g. at startup or after a settings change). */
+    poke() {
+      schedule();
     },
     stop() {
       stopped = true;

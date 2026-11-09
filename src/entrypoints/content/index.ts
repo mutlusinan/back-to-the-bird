@@ -1,6 +1,14 @@
+import '../../theme/tokens.css';
+import '../../features/surfaces/style.css';
+import '../../features/branding/style.css';
+import { main } from './main';
+
 export default defineContentScript({
   matches: ['https://x.com/*'],
   runAt: 'document_start',
+  allFrames: true,
   cssInjectionMode: 'manifest',
-  main() {},
+  main() {
+    void main({ doc: document, win: window });
+  },
 });
