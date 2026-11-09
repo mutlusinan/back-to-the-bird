@@ -25,10 +25,12 @@ test('surfaces paints the page and cards through tokens', () => {
   // `html[…][…] [style^=…]` (0,3,1). `:is(body,#ot-page)` lifts the body rule to (1,1,2) so the page
   // color wins (found in the live check: the body showed the card color).
   expect(surfacesCss).toContain('html[data-ot-f-surfaces] body:is(body,#ot-page){background-color:var(--ot-bg-page) !important}');
-  expect(surfacesCss).toContain('html[data-ot-f-surfaces] [data-ot~="primaryColumn"]');
-  expect(surfacesCss).toContain('html[data-ot-f-surfaces] [data-ot~="sidebarBox"]');
-  expect(surfacesCss).toContain('background-color:var(--ot-bg-card)');
-  expect(surfacesCss).toContain('var(--ot-border)');
+  // Same lift for the cards: X may paint a column or box with another mapped color (class rule
+  // (0,3,1) or inline !important), which would otherwise beat the card color.
+  expect(surfacesCss).toContain(
+    'html[data-ot-f-surfaces] :is([data-ot~="primaryColumn"],[data-ot~="sidebarBox"],#ot-card)' +
+      '{background-color:var(--ot-bg-card) !important;border-color:var(--ot-border) !important}',
+  );
 });
 
 test('surfaces uses no physical direction properties', () => {
