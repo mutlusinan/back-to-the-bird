@@ -34,11 +34,18 @@ for (const era of ['2014', '2017'] as const) {
         document.body.insertAdjacentHTML(
           'beforeend',
           `<div role="dialog"><button data-testid="tweetButton"><div dir="ltr"><div><span><span>Post</span></span></div></div></button></div>
-           <div role="menu"><div role="menuitem" data-testid="retweetConfirm"><div><svg></svg></div><div><div dir="ltr"><span>Repost</span></div></div></div></div>`,
+           <div role="menu"><div role="menuitem" data-testid="retweetConfirm"><div><svg></svg></div><div><div dir="ltr"><span>Repost</span></div></div></div>
+           <a role="menuitem" href="/compose/post" id="quote"><div><svg></svg></div><div><div dir="ltr"><span>Quote</span></div></div></a></div>`,
+        );
+        // Profile header and its first tab: two span children (label + spacer) and the sort arrow.
+        document.querySelector('[data-testid="primaryColumn"]')!.insertAdjacentHTML(
+          'afterbegin',
+          `<div data-testid="UserName"></div>
+           <div role="tablist"><div role="presentation"><a role="tab" href="/someone" aria-haspopup="menu" id="posts"><div><div dir="ltr"><div><span><span>Posts</span><span> </span><svg></svg></span></div></div></div></a></div></div>`,
         );
         await (window as unknown as { OTPreview: { run(c: string, o: { era: string }): Promise<unknown> } }).OTPreview.run(css, { era });
         const read = (testid: string) => {
-          const control = document.querySelector(`[data-testid="${testid}"]`)!;
+          const control = document.querySelector(testid.startsWith('#') ? testid : `[data-testid="${testid}"]`)!;
           const leaf = control.querySelector('span:not(:has(*))')!;
           const holder = leaf.parentElement!;
           const others = [control, ...control.querySelectorAll('*')].filter(
@@ -51,6 +58,8 @@ for (const era of ['2014', '2017'] as const) {
           submit: read('tweetButtonInline'),
           dialog: read('tweetButton'),
           repost: read('retweetConfirm'),
+          quote: read('#quote'),
+          posts: read('#posts'),
         };
       },
       { css, era },
@@ -59,6 +68,9 @@ for (const era of ['2014', '2017'] as const) {
     expect(seen.submit).toEqual({ word: '"Tweet" / ""', leafSize: '0px', others: 0 });
     expect(seen.dialog).toEqual({ word: '"Tweet" / ""', leafSize: '0px', others: 0 });
     expect(seen.repost).toEqual({ word: '"Retweet" / ""', leafSize: '0px', others: 0 });
+    const quote = era === '2014' ? 'Quote Tweet' : 'Retweet with comment';
+    expect(seen.quote).toEqual({ word: `"${quote}" / ""`, leafSize: '0px', others: 0 });
+    expect(seen.posts).toEqual({ word: '"Tweets" / ""', leafSize: '0px', others: 0 });
   });
 }
 

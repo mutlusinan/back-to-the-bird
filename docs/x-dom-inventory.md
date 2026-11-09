@@ -210,7 +210,7 @@ Etiket metni her zaman bir yaprak `<span>`'de; ebeveyni aynı font boyutunda.
 | Çapa | Seçici | Yapı / not |
 |---|---|---|
 | `wordComposeButton` | `[data-testid="SideNav_NewTweet_Button"]` | `a > div[dir] > div > span > div > div > span > span{Post}`, 17px; dar ekranda metin yaprağı boş |
-| `wordComposeSubmit` | `[data-testid="primaryColumn"]:not(:has([data-testid="inline_reply_offscreen"])) [data-testid="tweetButtonInline"], [role="dialog"]:not(:has(article)) [data-testid="tweetButton"]` | tweet sayfasındaki satır içi yanıt kutusu `inline_reply_offscreen` içinde ve "Reply" der; yanıt penceresi yanıtlanan tweeti `article` olarak içerir ve "Reply" der. happy-dom `:not(<karmaşık seçici>)`'yi desteklemiyor, `:not(:has())` destekliyor |
+| `wordComposeSubmit` | `[data-testid="primaryColumn"]:not(:has([data-testid="inline_reply_offscreen"])):not(:has([data-testid="tweetTextarea_1"])) [data-testid="tweetButtonInline"], [role="dialog"]:not(:has(article)):not(:has([data-testid="tweetTextarea_1"])) [data-testid="tweetButton"]` | tweet sayfasındaki satır içi yanıt kutusu `inline_reply_offscreen` içinde ve "Reply" der; yanıt penceresi yanıtlanan tweeti `article` olarak içerir ve "Reply" der. happy-dom `:not(<karmaşık seçici>)`'yi desteklemiyor, `:not(:has())` destekliyor |
 | `wordRepostAction` | `[data-testid="retweetConfirm"]` | menü öğesi `div[role=menuitem] > div > div[dir] > span{Repost}` |
 | `wordUndoRepostAction` | `[data-testid="unretweetConfirm"]` | aynı yapı |
 | `wordQuoteAction` | `[role="menu"] a[role="menuitem"][href="/compose/post"]` | `data-testid` yok |

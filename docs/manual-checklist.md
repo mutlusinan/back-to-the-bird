@@ -141,5 +141,12 @@ kural tarayıcıda geçersizdi (metin gizleniyor, sözcük çıkmıyordu); yapra
 saran ara `span` yüzünden menüdeki "Tweet" iki kez çiziliyordu. İkisi için
 Chrome'da çalışan Playwright testleri var.
 
-Ölçülmeyenler: gerçek Türkçe/Arapça X arayüzü (X'in kendi çevirileriyle
+Son incelemeden sonra ek canlı kontrol (gerçek `en` verisiyle üretilen CSS):
+Repost menüsünde Quote → "Retweet with comment" (2017) çiziliyor, menü
+genişliği sözcüğe göre büyüyor; takipçi sayfasında (`/<kullanıcı>/followers`)
+`UserName` olmadığı için hiçbir sekme "Tweets" olmuyor. Konu oluşturucu
+("Post all", ikinci metin alanı `tweetTextarea_1`) çapanın dışında. Zamanlanmış
+gönderi ("Schedule") bu hesapta açılmıyor; denenmedi.
+
+Ölçülmeyenler: zamanlanmış gönderi düğmesi, gerçek Türkçe/Arapça X arayüzü (X'in kendi çevirileriyle
 yapısı aynı olmalı), dar ekranda menü düğmesi (birim testinde), Firefox.

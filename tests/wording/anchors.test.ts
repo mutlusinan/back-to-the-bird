@@ -46,6 +46,13 @@ test('the submit button is relabelled only where X says "Post", not in the reply
   expect(ids('wordComposeSubmit')).toEqual(['inline', 'modal-post']);
 });
 
+test('a thread composer ("Post all") keeps X’s label', () => {
+  for (const composer of document.querySelectorAll('[data-testid="primaryColumn"], [role="dialog"]')) {
+    composer.insertAdjacentHTML('afterbegin', '<div data-testid="tweetTextarea_0"></div><div data-testid="tweetTextarea_1"></div>');
+  }
+  expect(ids('wordComposeSubmit')).toEqual([]);
+});
+
 test('on a tweet page the inline composer is a reply composer and keeps "Reply"', () => {
   document.querySelector('#inline')!.remove();
   document
